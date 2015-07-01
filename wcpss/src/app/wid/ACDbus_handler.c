@@ -8981,16 +8981,24 @@ int WID_RADIO_SET_MODE(unsigned int RadioID, unsigned int RadioMode)
 	{
 
 	}
-	else if(Radio_11g_11gn == RadioMode)
+	if((RadioMode == 44)||(RadioMode == 12))
 	{
-		if((13 == AC_RADIO[RadioID]->Radio_Type_Bank) || (44 == AC_RADIO[RadioID]->Radio_Type_Bank))
+		if((AC_RADIO[RadioID]->Radio_Type_Bank != 12)||(AC_RADIO[RadioID]->Radio_Type_Bank != 13)||(AC_RADIO[RadioID]->Radio_Type_Bank != 44))
 		{
 				
 		}
 		else
-		{
 			return WTP_NO_SURPORT_TYPE;		
+	}
+    else if((RadioMode == Radio_11ac)||(RadioMode == Radio_11an_11ac)||(RadioMode == Radio_11a_11an_11ac))
+	{
+		if((AC_RADIO[RadioID]->Radio_Type_Bank != 10)||(AC_RADIO[RadioID]->Radio_Type_Bank != 26))
+		{
+					
 		}
+		else
+			return WTP_NO_SURPORT_TYPE;	
+            
 	}
 	else
 	{
