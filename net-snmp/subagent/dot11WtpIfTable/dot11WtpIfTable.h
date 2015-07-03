@@ -65,6 +65,8 @@ void init_dot11WtpIfTable(void);
      */
 typedef netsnmp_data_list * dot11WtpIfTable_registration_ptr;
 
+#define U64 unsigned long long 
+
 /**********************************************************************/
 /*
  * TODO:110:r: |-> Review dot11WtpIfTable data context structure.
@@ -138,6 +140,106 @@ size_t      wtpIfName_len; /* # of char elements, not bytes */
 
     u_long   wtpIfUplinkRealtimeKbyteRate;
     u_long   wtpIfDownlinkRealtimeKbyteRate;    
+        /*
+         * wtpipv6IfInReceivesPkts(15)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInReceivesPkts;
+    
+        /*
+         * wtpipv6IfInHdrErrorsPkts(16)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInHdrErrorsPkts;
+    
+        /*
+         * wtpipv6IfInTooBigErrorsPkts(17)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInTooBigErrorsPkts;
+    
+        /*
+         * wtpipv6IfInNoRoutesPkts(18)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInNoRoutesPkts;
+    
+        /*
+         * wtpipv6IfInAddrErrorsPkts(19)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInAddrErrorsPkts;
+    
+        /*
+         * wtpipv6IfInUnknownProtosPkts(20)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInUnknownProtosPkts;
+    
+        /*
+         * wtpipv6IfInTruncatedPkts(21)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInTruncatedPkts;
+    
+        /*
+         * wtpipv6IfInDiscardsPkts(22)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInDiscardsPkts;
+    
+        /*
+         * wtpipv6IfInDeliversPkts(23)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInDeliversPkts;
+    
+        /*
+         * wtpipv6IfOutForwDatagramsPkts(24)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutForwDatagramsPkts;
+    
+        /*
+         * wtpipv6IfOutRequestsPkts(25)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutRequestsPkts;
+    
+        /*
+         * wtpipv6IfOutDiscardsPkts(26)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutDiscardsPkts;
+    
+        /*
+         * wtpipv6IfOutFragOKsPkts(27)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutFragOKsPkts;
+    
+        /*
+         * wtpipv6IfOutFragFailsPkts(28)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutFragFailsPkts;
+    
+        /*
+         * wtpipv6IfOutFragCreatesPkts(29)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutFragCreatesPkts;
+    
+        /*
+         * wtpipv6IfReasmReqdsPkts(30)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfReasmReqdsPkts;
+    
+        /*
+         * wtpipv6IfReasmOKsPkts(31)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfReasmOKsPkts;
+    
+        /*
+         * wtpipv6IfReasmFailsPkts(32)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfReasmFailsPkts;
+    
+        /*
+         * wtpipv6IfInMcastPkts(33)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfInMcastPkts;
+    
+        /*
+         * wtpipv6IfOutMcastPkts(34)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         */
+   U64   wtpipv6IfOutMcastPkts;
+    
 } dot11WtpIfTable_data;
 
 

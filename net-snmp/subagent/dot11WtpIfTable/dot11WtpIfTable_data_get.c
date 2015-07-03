@@ -1425,5 +1425,1048 @@ wtpIfDownlinkRealtimeKbyteRate_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, u_lo
     return MFD_SUCCESS;
 } /* wtpIfDownlinkRealtimeKbyteRate_get */
 
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInReceivesPkts
+ * wtpipv6IfInReceivesPkts is subid 15 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.15
+ * Description:
+The total number of ipv6 packets the interface received.
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInReceivesPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInReceivesPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInReceivesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInReceivesPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInReceivesPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInReceivesPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInReceivesPkts data.
+ * get (* wtpipv6IfInReceivesPkts_val_ptr ).low and (* wtpipv6IfInReceivesPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInReceivesPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInReceivesPkts.high;
+    (* wtpipv6IfInReceivesPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInReceivesPkts.low;
+*/
+    (* wtpipv6IfInReceivesPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInReceivesPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInReceivesPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInHdrErrorsPkts
+ * wtpipv6IfInHdrErrorsPkts is subid 16 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.16
+ * Description:
+The total number of ipv6 packets the interface ready to throw away.
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInHdrErrorsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInHdrErrorsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInHdrErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInHdrErrorsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInHdrErrorsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInHdrErrorsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInHdrErrorsPkts data.
+ * get (* wtpipv6IfInHdrErrorsPkts_val_ptr ).low and (* wtpipv6IfInHdrErrorsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInHdrErrorsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts.high;
+    (* wtpipv6IfInHdrErrorsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts.low;
+*/
+    (* wtpipv6IfInHdrErrorsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInHdrErrorsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInTooBigErrorsPkts
+ * wtpipv6IfInTooBigErrorsPkts is subid 17 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.17
+ * Description:
+The total number of ipv6 packets those of too big to forward.
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInTooBigErrorsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInTooBigErrorsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInTooBigErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInTooBigErrorsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInTooBigErrorsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInTooBigErrorsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInTooBigErrorsPkts data.
+ * get (* wtpipv6IfInTooBigErrorsPkts_val_ptr ).low and (* wtpipv6IfInTooBigErrorsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInTooBigErrorsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts.high;
+    (* wtpipv6IfInTooBigErrorsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts.low;
+*/
+    (* wtpipv6IfInTooBigErrorsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInTooBigErrorsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInNoRoutesPkts
+ * wtpipv6IfInNoRoutesPkts is subid 18 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.18
+ * Description:
+The total number of ipv6 packets those of no routing and discarded.
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInNoRoutesPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInNoRoutesPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInNoRoutesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInNoRoutesPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInNoRoutesPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInNoRoutesPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInNoRoutesPkts data.
+ * get (* wtpipv6IfInNoRoutesPkts_val_ptr ).low and (* wtpipv6IfInNoRoutesPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInNoRoutesPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInNoRoutesPkts.high;
+    (* wtpipv6IfInNoRoutesPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInNoRoutesPkts.low;
+*/
+    (* wtpipv6IfInNoRoutesPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInNoRoutesPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInNoRoutesPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInAddrErrorsPkts
+ * wtpipv6IfInAddrErrorsPkts is subid 19 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.19
+ * Description:
+The total number of ipv6 packets due to the input of IPv6 address illegal .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInAddrErrorsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInAddrErrorsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInAddrErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInAddrErrorsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInAddrErrorsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInAddrErrorsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInAddrErrorsPkts data.
+ * get (* wtpipv6IfInAddrErrorsPkts_val_ptr ).low and (* wtpipv6IfInAddrErrorsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInAddrErrorsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts.high;
+    (* wtpipv6IfInAddrErrorsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts.low;
+*/
+    (* wtpipv6IfInAddrErrorsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInAddrErrorsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInUnknownProtosPkts
+ * wtpipv6IfInUnknownProtosPkts is subid 20 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.20
+ * Description:
+The total number of ipv6 packets due to unknown or does not support agreement .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInUnknownProtosPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInUnknownProtosPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInUnknownProtosPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInUnknownProtosPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInUnknownProtosPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInUnknownProtosPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInUnknownProtosPkts data.
+ * get (* wtpipv6IfInUnknownProtosPkts_val_ptr ).low and (* wtpipv6IfInUnknownProtosPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInUnknownProtosPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts.high;
+    (* wtpipv6IfInUnknownProtosPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts.low;
+*/
+    (* wtpipv6IfInUnknownProtosPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInUnknownProtosPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInTruncatedPkts
+ * wtpipv6IfInTruncatedPkts is subid 21 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.21
+ * Description:
+The total number of ipv6 packets due to the incomplete data .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInTruncatedPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInTruncatedPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInTruncatedPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInTruncatedPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInTruncatedPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInTruncatedPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInTruncatedPkts data.
+ * get (* wtpipv6IfInTruncatedPkts_val_ptr ).low and (* wtpipv6IfInTruncatedPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInTruncatedPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInTruncatedPkts.high;
+    (* wtpipv6IfInTruncatedPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInTruncatedPkts.low;
+*/
+    (* wtpipv6IfInTruncatedPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInTruncatedPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInTruncatedPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInDiscardsPkts
+ * wtpipv6IfInDiscardsPkts is subid 22 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.22
+ * Description:
+The total number of ipv6 packets unable to continue processing .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInDiscardsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInDiscardsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInDiscardsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInDiscardsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInDiscardsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInDiscardsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInDiscardsPkts data.
+ * get (* wtpipv6IfInDiscardsPkts_val_ptr ).low and (* wtpipv6IfInDiscardsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInDiscardsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInDiscardsPkts.high;
+    (* wtpipv6IfInDiscardsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInDiscardsPkts.low;
+*/
+    (* wtpipv6IfInDiscardsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInDiscardsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInDiscardsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInDeliversPkts
+ * wtpipv6IfInDeliversPkts is subid 23 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.23
+ * Description:
+The total number of ipv6 packets all ipv6 user agreement sent successfully .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInDeliversPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInDeliversPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInDeliversPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInDeliversPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInDeliversPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInDeliversPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInDeliversPkts data.
+ * get (* wtpipv6IfInDeliversPkts_val_ptr ).low and (* wtpipv6IfInDeliversPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfInDeliversPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInDeliversPkts.high;
+    (* wtpipv6IfInDeliversPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInDeliversPkts.low;
+*/
+    (* wtpipv6IfInDeliversPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInDeliversPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInDeliversPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutForwDatagramsPkts
+ * wtpipv6IfOutForwDatagramsPkts is subid 24 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.24
+ * Description:
+The total number of ipv6 packets those received and forwarded to the final node successfully .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutForwDatagramsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutForwDatagramsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutForwDatagramsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutForwDatagramsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutForwDatagramsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutForwDatagramsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutForwDatagramsPkts data.
+ * get (* wtpipv6IfOutForwDatagramsPkts_val_ptr ).low and (* wtpipv6IfOutForwDatagramsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutForwDatagramsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts.high;
+    (* wtpipv6IfOutForwDatagramsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts.low;
+*/
+    (* wtpipv6IfOutForwDatagramsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutForwDatagramsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutRequestsPkts
+ * wtpipv6IfOutRequestsPkts is subid 25 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.25
+ * Description:
+Transport requirements of the local IPv6 all user agreement output message number .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutRequestsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutRequestsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutRequestsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutRequestsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutRequestsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutRequestsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutRequestsPkts data.
+ * get (* wtpipv6IfOutRequestsPkts_val_ptr ).low and (* wtpipv6IfOutRequestsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutRequestsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutRequestsPkts.high;
+    (* wtpipv6IfOutRequestsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutRequestsPkts.low;
+*/
+    (* wtpipv6IfOutRequestsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutRequestsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutRequestsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutDiscardsPkts
+ * wtpipv6IfOutDiscardsPkts is subid 26 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.26
+ * Description:
+Due to be continue to transmit discarded IPv6 output message number .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutDiscardsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutDiscardsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutDiscardsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutDiscardsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutDiscardsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutDiscardsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutDiscardsPkts data.
+ * get (* wtpipv6IfOutDiscardsPkts_val_ptr ).low and (* wtpipv6IfOutDiscardsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutDiscardsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutDiscardsPkts.high;
+    (* wtpipv6IfOutDiscardsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutDiscardsPkts.low;
+*/
+    (* wtpipv6IfOutDiscardsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutDiscardsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutDiscardsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutFragOKsPkts
+ * wtpipv6IfOutFragOKsPkts is subid 27 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.27
+ * Description:
+Output interface successful shard of IPv6 output message number .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutFragOKsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutFragOKsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutFragOKsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragOKsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutFragOKsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutFragOKsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutFragOKsPkts data.
+ * get (* wtpipv6IfOutFragOKsPkts_val_ptr ).low and (* wtpipv6IfOutFragOKsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutFragOKsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutFragOKsPkts.high;
+    (* wtpipv6IfOutFragOKsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutFragOKsPkts.low;
+*/
+    (* wtpipv6IfOutFragOKsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutFragOKsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutFragOKsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutFragFailsPkts
+ * wtpipv6IfOutFragFailsPkts is subid 28 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.28
+ * Description:
+Due to the output interface to fragmentation and number of IPv6 packet is discarded .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutFragFailsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutFragFailsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutFragFailsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragFailsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutFragFailsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutFragFailsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutFragFailsPkts data.
+ * get (* wtpipv6IfOutFragFailsPkts_val_ptr ).low and (* wtpipv6IfOutFragFailsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutFragFailsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutFragFailsPkts.high;
+    (* wtpipv6IfOutFragFailsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutFragFailsPkts.low;
+*/
+    (* wtpipv6IfOutFragFailsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutFragFailsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutFragFailsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutFragCreatesPkts
+ * wtpipv6IfOutFragCreatesPkts is subid 29 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.29
+ * Description:
+Output interface based on fragmentation results of IPv6 packet fragmentation .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutFragCreatesPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutFragCreatesPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutFragCreatesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragCreatesPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutFragCreatesPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutFragCreatesPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutFragCreatesPkts data.
+ * get (* wtpipv6IfOutFragCreatesPkts_val_ptr ).low and (* wtpipv6IfOutFragCreatesPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutFragCreatesPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts.high;
+    (* wtpipv6IfOutFragCreatesPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts.low;
+*/
+    (* wtpipv6IfOutFragCreatesPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutFragCreatesPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfReasmReqdsPkts
+ * wtpipv6IfReasmReqdsPkts is subid 30 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.30
+ * Description:
+IPv6 subdivision number of interfaces need to restructure .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfReasmReqdsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfReasmReqdsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfReasmReqdsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmReqdsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfReasmReqdsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfReasmReqdsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfReasmReqdsPkts data.
+ * get (* wtpipv6IfReasmReqdsPkts_val_ptr ).low and (* wtpipv6IfReasmReqdsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfReasmReqdsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfReasmReqdsPkts.high;
+    (* wtpipv6IfReasmReqdsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfReasmReqdsPkts.low;
+*/
+    (* wtpipv6IfReasmReqdsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfReasmReqdsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfReasmReqdsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfReasmOKsPkts
+ * wtpipv6IfReasmOKsPkts is subid 31 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.31
+ * Description:
+Successful restructuring of IPv6 packet number .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfReasmOKsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfReasmOKsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfReasmOKsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmOKsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfReasmOKsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfReasmOKsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfReasmOKsPkts data.
+ * get (* wtpipv6IfReasmOKsPkts_val_ptr ).low and (* wtpipv6IfReasmOKsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfReasmOKsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfReasmOKsPkts.high;
+    (* wtpipv6IfReasmOKsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfReasmOKsPkts.low;
+*/
+    (* wtpipv6IfReasmOKsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfReasmOKsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfReasmOKsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfReasmFailsPkts
+ * wtpipv6IfReasmFailsPkts is subid 32 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.32
+ * Description:
+Due to the failure of fragmentation of IPv6 reorganization algorithm .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfReasmFailsPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfReasmFailsPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfReasmFailsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmFailsPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfReasmFailsPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfReasmFailsPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfReasmFailsPkts data.
+ * get (* wtpipv6IfReasmFailsPkts_val_ptr ).low and (* wtpipv6IfReasmFailsPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfReasmFailsPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfReasmFailsPkts.high;
+    (* wtpipv6IfReasmFailsPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfReasmFailsPkts.low;
+*/
+    (* wtpipv6IfReasmFailsPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfReasmFailsPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfReasmFailsPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfInMcastPkts
+ * wtpipv6IfInMcastPkts is subid 33 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.33
+ * Description:
+Interface receives the IPv6 multicast packets .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfInMcastPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfInMcastPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfInMcastPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInMcastPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfInMcastPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfInMcastPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfInMcastPkts data.
+ * get (* wtpipv6IfInMcastPkts_val_ptr ).low and (* wtpipv6IfInMcastPkts_val_ptr ).high from rowreq_ctx->data
+ */
+ 
+/*
+    (* wtpipv6IfInMcastPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfInMcastPkts.high;
+    (* wtpipv6IfInMcastPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfInMcastPkts.low;
+*/
+
+    (* wtpipv6IfInMcastPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfInMcastPkts;
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfInMcastPkts_get */
+
+/*---------------------------------------------------------------------
+ * DOT11-WTP-MIB::dot11WtpIfEntry.wtpipv6IfOutMcastPkts
+ * wtpipv6IfOutMcastPkts is subid 34 of dot11WtpIfEntry.
+ * Its status is Current, and its access level is ReadOnly.
+ * OID: .1.3.6.1.4.1.31656.6.1.1.3.1.1.34
+ * Description:
+Interface transmit IPv6 multicast packets .
+ *
+ * Attributes:
+ *   accessible 1     isscalar 0     enums  0      hasdefval 0
+ *   readable   1     iscolumn 1     ranges 0      hashint   0
+ *   settable   0
+ *
+ *
+ * Its syntax is COUNTER64 (based on perltype COUNTER64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ */
+/**
+ * Extract the current value of the wtpipv6IfOutMcastPkts data.
+ *
+ * Set a value using the data context for the row.
+ *
+ * @param rowreq_ctx
+ *        Pointer to the row request context.
+ * @param wtpipv6IfOutMcastPkts_val_ptr
+ *        Pointer to storage for a U64 variable
+ *
+ * @retval MFD_SUCCESS         : success
+ * @retval MFD_SKIP            : skip this node (no value for now)
+ * @retval MFD_ERROR           : Any other error
+ */
+int
+wtpipv6IfOutMcastPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutMcastPkts_val_ptr )
+{
+   /** we should have a non-NULL pointer */
+   netsnmp_assert( NULL != wtpipv6IfOutMcastPkts_val_ptr );
+   DEBUGMSGTL(("verbose:dot11WtpIfTable:wtpipv6IfOutMcastPkts_get","called\n"));
+
+/*
+ * TODO:231:o: |-> copy wtpipv6IfOutMcastPkts data.
+ * get (* wtpipv6IfOutMcastPkts_val_ptr ).low and (* wtpipv6IfOutMcastPkts_val_ptr ).high from rowreq_ctx->data
+ */
+
+/*
+    (* wtpipv6IfOutMcastPkts_val_ptr ).high = rowreq_ctx->data.wtpipv6IfOutMcastPkts.high;
+    (* wtpipv6IfOutMcastPkts_val_ptr ).low = rowreq_ctx->data.wtpipv6IfOutMcastPkts.low;
+*/
+    (* wtpipv6IfOutMcastPkts_val_ptr ) = rowreq_ctx->data.wtpipv6IfOutMcastPkts;
+
+
+    return MFD_SUCCESS;
+} /* wtpipv6IfOutMcastPkts_get */
+
+
 
 /** @} */

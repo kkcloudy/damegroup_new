@@ -68,6 +68,26 @@ extern "C" {
     int wtpIfDownlinkRealtimeRate_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, u_long * wtpIfDownlinkRealtimeRate_val_ptr );
     int wtpIfUplinkRealtimeKbyteRate_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, u_long * wtpIfUplinkRealtimeKbyteRate_val_ptr );
     int wtpIfDownlinkRealtimeKbyteRate_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, u_long * wtpIfDownlinkRealtimeKbyteRate_val_ptr );
+    int wtpipv6IfInReceivesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInReceivesPkts_val_ptr );
+    int wtpipv6IfInHdrErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInHdrErrorsPkts_val_ptr );
+    int wtpipv6IfInTooBigErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInTooBigErrorsPkts_val_ptr );
+    int wtpipv6IfInNoRoutesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInNoRoutesPkts_val_ptr );
+    int wtpipv6IfInAddrErrorsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInAddrErrorsPkts_val_ptr );
+    int wtpipv6IfInUnknownProtosPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInUnknownProtosPkts_val_ptr );
+    int wtpipv6IfInTruncatedPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInTruncatedPkts_val_ptr );
+    int wtpipv6IfInDiscardsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInDiscardsPkts_val_ptr );
+    int wtpipv6IfInDeliversPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInDeliversPkts_val_ptr );
+    int wtpipv6IfOutForwDatagramsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutForwDatagramsPkts_val_ptr );
+    int wtpipv6IfOutRequestsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutRequestsPkts_val_ptr );
+    int wtpipv6IfOutDiscardsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutDiscardsPkts_val_ptr );
+    int wtpipv6IfOutFragOKsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragOKsPkts_val_ptr );
+    int wtpipv6IfOutFragFailsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragFailsPkts_val_ptr );
+    int wtpipv6IfOutFragCreatesPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutFragCreatesPkts_val_ptr );
+    int wtpipv6IfReasmReqdsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmReqdsPkts_val_ptr );
+    int wtpipv6IfReasmOKsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmOKsPkts_val_ptr );
+    int wtpipv6IfReasmFailsPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfReasmFailsPkts_val_ptr );
+    int wtpipv6IfInMcastPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfInMcastPkts_val_ptr );
+    int wtpipv6IfOutMcastPkts_get( dot11WtpIfTable_rowreq_ctx *rowreq_ctx, U64 * wtpipv6IfOutMcastPkts_val_ptr );
 
 int dot11WtpIfTable_indexes_set_tbl_idx(dot11WtpIfTable_mib_index *tbl_idx, char *wtpMacAddr_val_ptr,  size_t wtpMacAddr_val_ptr_len, long wtpIfIndex_val);
 int dot11WtpIfTable_indexes_set(dot11WtpIfTable_rowreq_ctx *rowreq_ctx, char *wtpMacAddr_val_ptr,  size_t wtpMacAddr_val_ptr_len, long wtpIfIndex_val);

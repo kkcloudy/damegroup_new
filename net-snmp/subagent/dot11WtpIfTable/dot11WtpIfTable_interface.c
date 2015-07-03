@@ -693,6 +693,146 @@ rc = wtpIfUplinkRealtimeKbyteRate_get(rowreq_ctx, (u_long *)var->val.string );
 rc = wtpIfDownlinkRealtimeKbyteRate_get(rowreq_ctx, (u_long *)var->val.string );
         break;
 
+    /* wtpipv6IfInReceivesPkts(15)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINRECEIVESPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInReceivesPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInHdrErrorsPkts(16)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINHDRERRORSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInHdrErrorsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInTooBigErrorsPkts(17)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINTOOBIGERRORSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInTooBigErrorsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInNoRoutesPkts(18)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINNOROUTESPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInNoRoutesPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInAddrErrorsPkts(19)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINADDRERRORSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInAddrErrorsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInUnknownProtosPkts(20)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINUNKNOWNPROTOSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInUnknownProtosPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInTruncatedPkts(21)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINTRUNCATEDPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInTruncatedPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInDiscardsPkts(22)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINDISCARDSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInDiscardsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInDeliversPkts(23)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINDELIVERSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInDeliversPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutForwDatagramsPkts(24)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTFORWDATAGRAMSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutForwDatagramsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutRequestsPkts(25)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTREQUESTSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutRequestsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutDiscardsPkts(26)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTDISCARDSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutDiscardsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutFragOKsPkts(27)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTFRAGOKSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutFragOKsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutFragFailsPkts(28)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTFRAGFAILSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutFragFailsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutFragCreatesPkts(29)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTFRAGCREATESPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutFragCreatesPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfReasmReqdsPkts(30)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFREASMREQDSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfReasmReqdsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfReasmOKsPkts(31)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFREASMOKSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfReasmOKsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfReasmFailsPkts(32)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFREASMFAILSPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfReasmFailsPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfInMcastPkts(33)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFINMCASTPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfInMcastPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
+    /* wtpipv6IfOutMcastPkts(34)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    case COLUMN_WTPIPV6IFOUTMCASTPKTS:
+    var->val_len = sizeof(U64);
+    var->type = ASN_COUNTER64;
+rc = wtpipv6IfOutMcastPkts_get(rowreq_ctx, (U64 *)var->val.string );
+        break;
+
      default:
          snmp_log(LOG_ERR,"unknown column %d in _dot11WtpIfTable_get_column\n", column);
          break;

@@ -527,6 +527,197 @@ dot11WtpIfTable_cache_load(netsnmp_container *container)
     rowreq_ctx->data.wtpIfDownlinkRealtimeRate = SubShowNode->wtpIfDownlinkRealtimeRate;
     rowreq_ctx->data.wtpIfUplinkRealtimeKbyteRate = SubShowNode->wtpIfUplinkRealtimeRate / 1024;
     rowreq_ctx->data.wtpIfDownlinkRealtimeKbyteRate = SubShowNode->wtpIfDownlinkRealtimeRate / 1024;
+
+	/*
+     * setup/save data for wtpipv6IfInReceivesPkts
+     * wtpipv6IfInReceivesPkts(15)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+	
+    //rowreq_ctx->data.wtpipv6IfInReceivesPkts.high = wtpipv6IfInReceivesPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInReceivesPkts.low = wtpipv6IfInReceivesPkts.low;
+
+	rowreq_ctx->data.wtpipv6IfInReceivesPkts = 0;
+
+    /*
+     * setup/save data for wtpipv6IfInHdrErrorsPkts
+     * wtpipv6IfInHdrErrorsPkts(16)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts.high = wtpipv6IfInHdrErrorsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts.low = wtpipv6IfInHdrErrorsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInHdrErrorsPkts = 0;
+    
+    /*
+     * setup/save data for wtpipv6IfInTooBigErrorsPkts
+     * wtpipv6IfInTooBigErrorsPkts(17)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts.high = wtpipv6IfInTooBigErrorsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts.low = wtpipv6IfInTooBigErrorsPkts.low;
+
+	rowreq_ctx->data.wtpipv6IfInTooBigErrorsPkts = 0;
+    
+    /*
+     * setup/save data for wtpipv6IfInNoRoutesPkts
+     * wtpipv6IfInNoRoutesPkts(18)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInNoRoutesPkts.high = wtpipv6IfInNoRoutesPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInNoRoutesPkts.low = wtpipv6IfInNoRoutesPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInNoRoutesPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfInAddrErrorsPkts
+     * wtpipv6IfInAddrErrorsPkts(19)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts.high = wtpipv6IfInAddrErrorsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts.low = wtpipv6IfInAddrErrorsPkts.low;
+
+	rowreq_ctx->data.wtpipv6IfInAddrErrorsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfInUnknownProtosPkts
+     * wtpipv6IfInUnknownProtosPkts(20)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts.high = wtpipv6IfInUnknownProtosPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts.low = wtpipv6IfInUnknownProtosPkts.low;
+    
+    rowreq_ctx->data.wtpipv6IfInUnknownProtosPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfInTruncatedPkts
+     * wtpipv6IfInTruncatedPkts(21)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInTruncatedPkts.high = wtpipv6IfInTruncatedPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInTruncatedPkts.low = wtpipv6IfInTruncatedPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInTruncatedPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfInDiscardsPkts
+     * wtpipv6IfInDiscardsPkts(22)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInDiscardsPkts.high = wtpipv6IfInDiscardsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInDiscardsPkts.low = wtpipv6IfInDiscardsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInDiscardsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfInDeliversPkts
+     * wtpipv6IfInDeliversPkts(23)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInDeliversPkts.high = wtpipv6IfInDeliversPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInDeliversPkts.low = wtpipv6IfInDeliversPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInDeliversPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutForwDatagramsPkts
+     * wtpipv6IfOutForwDatagramsPkts(24)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts.high = wtpipv6IfOutForwDatagramsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts.low = wtpipv6IfOutForwDatagramsPkts.low;
+
+	rowreq_ctx->data.wtpipv6IfOutForwDatagramsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutRequestsPkts
+     * wtpipv6IfOutRequestsPkts(25)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutRequestsPkts.high = wtpipv6IfOutRequestsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutRequestsPkts.low = wtpipv6IfOutRequestsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfOutRequestsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutDiscardsPkts
+     * wtpipv6IfOutDiscardsPkts(26)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutDiscardsPkts.high = wtpipv6IfOutDiscardsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutDiscardsPkts.low = wtpipv6IfOutDiscardsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfOutDiscardsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutFragOKsPkts
+     * wtpipv6IfOutFragOKsPkts(27)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutFragOKsPkts.high = wtpipv6IfOutFragOKsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutFragOKsPkts.low = wtpipv6IfOutFragOKsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfOutFragOKsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutFragFailsPkts
+     * wtpipv6IfOutFragFailsPkts(28)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutFragFailsPkts.high = wtpipv6IfOutFragFailsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutFragFailsPkts.low = wtpipv6IfOutFragFailsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfOutFragFailsPkts = 0;
+    /*
+     * setup/save data for wtpipv6IfOutFragCreatesPkts
+     * wtpipv6IfOutFragCreatesPkts(29)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts.high = wtpipv6IfOutFragCreatesPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts.low = wtpipv6IfOutFragCreatesPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfOutFragCreatesPkts = 0;
+    
+    /*
+     * setup/save data for wtpipv6IfReasmReqdsPkts
+     * wtpipv6IfReasmReqdsPkts(30)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfReasmReqdsPkts.high = wtpipv6IfReasmReqdsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfReasmReqdsPkts.low = wtpipv6IfReasmReqdsPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfReasmReqdsPkts = 0;
+    
+    /*
+     * setup/save data for wtpipv6IfReasmOKsPkts
+     * wtpipv6IfReasmOKsPkts(31)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfReasmOKsPkts.high = wtpipv6IfReasmOKsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfReasmOKsPkts.low = wtpipv6IfReasmOKsPkts.low;
+    
+    rowreq_ctx->data.wtpipv6IfReasmOKsPkts = 0;
+
+    /*
+     * setup/save data for wtpipv6IfReasmFailsPkts
+     * wtpipv6IfReasmFailsPkts(32)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfReasmFailsPkts.high = wtpipv6IfReasmFailsPkts.high;
+    //rowreq_ctx->data.wtpipv6IfReasmFailsPkts.low = wtpipv6IfReasmFailsPkts.low;
+    
+    rowreq_ctx->data.wtpipv6IfReasmFailsPkts = 0;
+
+    /*
+     * setup/save data for wtpipv6IfInMcastPkts
+     * wtpipv6IfInMcastPkts(33)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfInMcastPkts.high = wtpipv6IfInMcastPkts.high;
+    //rowreq_ctx->data.wtpipv6IfInMcastPkts.low = wtpipv6IfInMcastPkts.low;
+
+    rowreq_ctx->data.wtpipv6IfInMcastPkts = 0;
+    
+    /*
+     * setup/save data for wtpipv6IfOutMcastPkts
+     * wtpipv6IfOutMcastPkts(34)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+     */
+    /** no mapping */
+    //rowreq_ctx->data.wtpipv6IfOutMcastPkts.high = wtpipv6IfOutMcastPkts.high;
+    //rowreq_ctx->data.wtpipv6IfOutMcastPkts.low = wtpipv6IfOutMcastPkts.low;
+
+	rowreq_ctx->data.wtpipv6IfOutMcastPkts = 0;
+
 	        /*
 	         * insert into table container
 	         */
