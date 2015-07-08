@@ -664,11 +664,13 @@ typedef struct {
 	
 	unsigned char addr[MAC_LEN];
 	unsigned char wtp_mac[MAC_LEN];
+	unsigned char new_wtp_mac[MAC_LEN];
 	unsigned char wtp_name[WTP_NAME_LEN];
 	unsigned char wlan_id;
 	unsigned int radio_id;
 	unsigned int vlan_id;
 	unsigned char essid[ESSID_DEFAULT_LEN+1];
+	unsigned char new_essid[ESSID_DEFAULT_LEN+1];
 	unsigned int auth_type;
 	unsigned int reason;
 	unsigned int wtp_id;

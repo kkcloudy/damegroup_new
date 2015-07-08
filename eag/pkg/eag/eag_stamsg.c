@@ -513,6 +513,9 @@ stamsg_proc(eag_stamsg_t *stamsg, uint8_t usermac[6],
 
 			if (APPCONN_STATUS_AUTHED == appconn->session.state) {
 				eag_ins_syn_user(stamsg->eagins, appconn);
+				eag_portal_cross_area_roam(stamsg->portal, appconn,sta_msg);
+
+
 			}
 		}
 		break;

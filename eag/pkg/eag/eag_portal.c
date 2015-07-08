@@ -2667,6 +2667,58 @@ eag_portal_logout_errcode1_proc(eag_portal_t *portal,
 }
 
 int
+eag_portal_area_roam_logout_proc(eag_portal_t *portal,
+		uint32_t portal_ip,
+		uint16_t portal_port,
+		struct portal_packet_t *reqpkt)
+{
+	user_addr_t user_addr = {0};
+	char user_ipstr[IPX_LEN] = "";
+	char user_macstr[32] = "";
+	char ap_macstr[32]= "";
+	char nas_ipstr[32]= "";
+	char portal_ipstr[32]= "";
+	struct app_conn_t *appconn = NULL;
+	time_t timenow = 0;
+	struct timeval tv = {0};
+
+	eag_time_gettimeofday(&tv, NULL);
+	timenow = tv.tv_sec;
+
+	if (NULL == portal || NULL == reqpkt) {
+		eag_log_err("eag_portal_logout_area_roam_logout_proc input error");
+		return -1;
+	}
+	
+	portal_packet_init_ipx(reqpkt, &user_addr);
+	ipx2str(&user_addr, user_ipstr, sizeof(user_ipstr));
+	
+	appconn = appconn_find_by_useripx(portal->appdb, &user_addr);
+	if (NULL == appconn) {
+		eag_log_filter(user_ipstr,"PortalReqLogout___UserIP:%s,ErrCode:%u",
+			user_ipstr, reqpkt->err_code);
+		admin_log_notice("PortalReqLogout___UserIP:%s,ErrCode:%u",
+				user_ipstr, reqpkt->err_code);
+	} else {
+		mac2str(appconn->session.usermac, user_macstr, sizeof(user_macstr), '-');
+		mac2str(appconn->session.apmac, ap_macstr, sizeof(ap_macstr)-1, '-');
+		ip2str(appconn->session.nasip, nas_ipstr, sizeof(nas_ipstr));
+		ip2str(portal_ip, portal_ipstr, sizeof(portal_ipstr));
+		log_app_filter(appconn,"PortalReqLogout___UserIP:%s,UserMAC:%s,Username:%s,ApMAC:%s,SSID:%s,NasIP:%s,PortalIP:%s,Interface:%s,ErrCode:%u",
+			user_ipstr, user_macstr, appconn->session.username, ap_macstr, appconn->session.essid, nas_ipstr, portal_ipstr, appconn->session.intf, reqpkt->err_code);
+		admin_log_notice("PortalReqLogout___UserIP:%s,UserMAC:%s,Username:%s,ApMAC:%s,SSID:%s,NasIP:%s,PortalIP:%s,Interface:%s,ErrCode:%u",
+			user_ipstr, user_macstr, appconn->session.username, ap_macstr, appconn->session.essid, nas_ipstr, portal_ipstr, appconn->session.intf, reqpkt->err_code);
+	}
+	eag_portal_notify_logout(portal, appconn,
+					RADIUS_TERMINATE_CAUSE_NAS_REQUEST);
+	appconn->on_ntf_logout = 1;
+	appconn->session.session_stop_time = timenow;
+	
+	return EAG_RETURN_OK;
+
+}
+
+int
 eag_portal_ack_logout_proc(eag_portal_t *portal,
 		uint32_t portal_ip,
 		uint16_t portal_port,
@@ -3254,6 +3306,21 @@ portal_proc_packet(eag_portal_t *portal,
 	case REQ_USER_OFFLINE:
 		eag_portal_user_offline_proc(portal, portal_ip, portal_port, reqpkt);
 		break;
+	case CROSS_AREA_ROAM_ACK:
+		if (0 == reqpkt->err_code) {
+			 eag_log_warning("portal proc packet userip %s, "
+			"packet type:%u,errcode: %u",
+			user_ipstr, reqpkt->type,reqpkt->err_code);
+		
+		} else if (0x01 == reqpkt->err_code) {
+			eag_portal_area_roam_logout_proc(portal, portal_ip, portal_port, reqpkt);
+
+		} else {
+		    eag_log_warning("portal proc packet userip %s, "
+			"packet type:%u,errcode: %u",
+			user_ipstr, reqpkt->type,reqpkt->err_code);
+		}
+		break;
 	default:
 		eag_log_warning("portal proc packet userip %s, "
 			"unexpected packet type:%u",
@@ -3348,7 +3415,8 @@ portal_receive(eag_thread_t *thread)
 		&& AFF_ACK_AUTH != reqpkt.type
 		&& REQ_INFO != reqpkt.type
 		&& ACK_MACBINDING_INFO != reqpkt.type
-		&& REQ_USER_OFFLINE != reqpkt.type) {
+		&& REQ_USER_OFFLINE != reqpkt.type
+		&& CROSS_AREA_ROAM_ACK != reqpkt.type) {
 		eag_log_warning("portal_receive unexpected packet type %d",
 			reqpkt.type);
 		return -1;
@@ -4033,6 +4101,77 @@ eag_portal_notify_logout_nowait(eag_portal_t * portal,
 			appconn->portal_srv.ntf_port, &(ntfpkt));
 	
 	return EAG_RETURN_OK;
+}
+
+int
+eag_portal_cross_area_roam(eag_portal_t * portal,
+		struct app_conn_t *appconn,
+		EagMsg *sta_msg)
+{
+	portal_sess_t *portalsess = NULL;
+	struct portal_packet_t ntfpkt = {0};
+	user_addr_t user_addr = {0};
+	char user_ipstr[IPX_LEN] = "";
+	char user_macstr[32] = "";
+	char ap_macstr[32]= "";
+	char nas_ipstr[32]= "";
+	char portal_ipstr[32]= "";
+	
+	if (NULL == portal || NULL == appconn) {
+		eag_log_err("eag_portal_cross_area_roam inpurt error");
+		return EAG_ERR_INPUT_PARAM_ERR;
+	}
+
+	memset(&ntfpkt, 0, sizeof(ntfpkt));
+	memset(&user_addr, 0, sizeof(user_addr));
+	memcpy(&user_addr, &(appconn->session.user_addr), sizeof(user_addr_t));
+	ipx2str(&user_addr, user_ipstr, sizeof(user_ipstr));
+	mac2str(appconn->session.usermac, user_macstr, sizeof(user_macstr)-1, '-');
+	mac2str(appconn->session.apmac, ap_macstr, sizeof(ap_macstr)-1, '-');
+	ip2str(appconn->session.nasip, nas_ipstr, sizeof(nas_ipstr));
+	ip2str(appconn->portal_srv.ip, portal_ipstr, sizeof(portal_ipstr));
+
+	portalsess = portal_sess_find_by_useripx(portal, &user_addr);
+	if (NULL != portalsess) {
+		eag_log_debug("eag_portal", "eag_portal_cross_area_roam"
+			"found portalsess by userip %s, portalsess status %s",
+			user_ipstr, sess_status2str(portalsess->status));
+
+		if (!sess_status_is_valid(portalsess, appconn)) {
+			eag_log_err("eag_portal_cross_area_roam "
+				"userip %s, sess_status %s not match user_state %d",
+				user_ipstr, sess_status2str(portalsess->status),
+				appconn->session.state);
+		}
+	
+	}
+	portal_packet_init_v2(&ntfpkt, CROSS_AREA_ROAM_NOTIFY, &user_addr, appconn->session.portal_version);
+	portal_packet_add_attr(&ntfpkt, ATTR_ROAM_NEW_AP, 
+				sta_msg->STA.new_wtp_mac, sizeof(sta_msg->STA.new_wtp_mac));
+	portal_packet_add_attr(&ntfpkt, ATTR_ROAM_NEW_ESSID, 
+				sta_msg->STA.new_essid, strlen(sta_msg->STA.new_essid));
+	portal_packet_add_attr(&ntfpkt, ATTR_ROAM_AP, 
+				sta_msg->STA.wtp_mac, sizeof(sta_msg->STA.wtp_mac));
+	portal_packet_add_attr(&ntfpkt, ATTR_ROAM_ESSID, 
+				sta_msg->STA.essid, strlen(sta_msg->STA.essid));
+        portal_packet_add_attr(&ntfpkt, ATTR_USERMAC, appconn->session.usermac,
+		sizeof(appconn->session.usermac));
+		
+	admin_log_notice("PortalNtfLogout___UserIP:%s,UserMAC:%s,UserName:%s,ApMAC:%s,SSID:%s,NasIP:%s,PortalIP:%s,Interface:%s,NasID:%s",
+			user_ipstr, user_macstr, appconn->session.username, ap_macstr, appconn->session.essid, 
+			nas_ipstr, portal_ipstr, appconn->session.intf, appconn->session.nasid);
+	log_app_filter(appconn,"PortalNtfLogout___UserIP:%s,UserMAC:%s,UserName:%s,ApMAC:%s,SSID:%s,NasIP:%s,PortalIP:%s,Interface:%s,NasID:%s",
+			user_ipstr, user_macstr, appconn->session.username, ap_macstr, appconn->session.essid, 
+			nas_ipstr, portal_ipstr, appconn->session.intf, appconn->session.nasid);
+	portal_req_authenticator(&ntfpkt, appconn->portal_srv.secret,
+		appconn->portal_srv.secretlen);
+	ip2str(appconn->session.inv_portal_ip, portal_ipstr, sizeof(portal_ipstr));
+
+	eag_portal_send_packet(portal, appconn->session.inv_portal_ip,
+			appconn->portal_srv.ntf_port, &(ntfpkt));
+	
+	return EAG_RETURN_OK;
+
 }
 
 int

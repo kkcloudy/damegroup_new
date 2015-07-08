@@ -3504,6 +3504,94 @@ int AsdStaInfoToEAG(struct asd_data *wasd, struct sta_info *sta, Operate op){
 	return 0;
 }
 
+int AsdStaInfoToEAGRoaming(struct sta_info *old_sta,struct sta_info *new_sta,Operate op)
+{
+    if(old_sta == NULL || old_sta->wasd ==NULL|| new_sta == NULL || new_sta->wasd == NULL){
+		asd_printf(ASD_DEFAULT,MSG_INFO,"func:%s wasd or sta is NULL!\n",__func__);
+		return -1;
+	}
+	
+	struct asd_data *owasd = old_sta->wasd;
+	struct asd_data *nwasd = new_sta->wasd;
+
+	if(0 == ASD_NOTICE_STA_INFO_TO_PORTAL)
+	{
+		asd_printf(ASD_DEFAULT,MSG_INFO,"ASD_NOTICE_STA_INFO_TO_PORTAL is changed!\n");
+		return -1;
+	}
+	EagMsg msg;
+	memset(&msg,0,sizeof(msg));
+	unsigned int wtpid = 0;
+	unsigned int new_wtpid = 0;
+	unsigned int len = 0;
+	wtpid = (owasd->BSSIndex)/L_BSS_NUM/L_RADIO_NUM;
+	new_wtpid = (nwasd->BSSIndex)/L_BSS_NUM/L_RADIO_NUM;
+
+	msg.Op = op;
+	msg.Type = EAG_TYPE;
+	os_memcpy(msg.STA.addr,old_sta->addr,MAC_LEN);
+	msg.STA.radio_id = owasd->Radio_G_ID;
+	msg.STA.ipaddr = old_sta->ipaddr;
+	msg.STA.ip6_addr = old_sta->ip6_addr;	/* add ipv6 add of sta */
+                        	
+    msg.STA.Login_IPv6_Host = old_sta->Login_IPv6_Host; /* add for ipv6 radius rfc3162, 2013-12-31 */
+    msg.STA.Framed_Interface_Id = old_sta->Framed_Interface_Id;							
+    msg.STA.Framed_IPv6_Prefix = old_sta->Framed_IPv6_Prefix;
+    msg.STA.IPv6_Prefix_length = old_sta->IPv6_Prefix_length;
+	
+	msg.STA.wlan_id = owasd->WlanID;
+	msg.STA.wtp_id = wtpid;
+	msg.STA.auth_type = old_sta->security_type;
+	msg.STA.reason = old_sta->acct_terminate_cause;
+
+    /* add wtp name for REQUIREMENTS-667 */
+	if(NULL != ASD_WTP_AP[wtpid])
+		os_memcpy(msg.STA.wtp_name,ASD_WTP_AP[wtpid]->WTPNAME,WTP_NAME_LEN);
+	if(NULL != old_sta->ssid)
+		os_memcpy(msg.STA.essid,old_sta->ssid->ssid,old_sta->ssid->ssid_len);	
+	if(NULL != ASD_WTP_AP[wtpid])
+		os_memcpy(msg.STA.wtp_mac,ASD_WTP_AP[wtpid]->WTPMAC,MAC_LEN);
+	if(NULL != ASD_BSS[owasd->BSSIndex])
+		msg.STA.vlan_id = ASD_BSS[owasd->BSSIndex]->vlanid;
+
+    new_sta->ssid = &nwasd->conf->ssid;
+	if(NULL != new_sta->ssid)
+		os_memcpy(msg.STA.new_essid,new_sta->ssid->ssid,new_sta->ssid->ssid_len);	
+	if(NULL != ASD_WTP_AP[new_wtpid])
+		os_memcpy(msg.STA.new_wtp_mac,ASD_WTP_AP[new_wtpid]->WTPMAC,MAC_LEN);
+
+	msg.STA.tx_data_bytes = old_sta->txbytes;
+	msg.STA.rx_data_bytes =old_sta->rxbytes;
+	msg.STA.tx_frames = (unsigned long)old_sta->txpackets;
+	msg.STA.rx_frames = (unsigned long)old_sta->rxpackets;
+	
+    /*yjl add for TL. 2014-2-28*/
+	if (WID_DEL == op)
+	{
+		msg.STA.initiative_leave = old_sta->initiative_leave;
+	}
+	
+	len = sizeof(msg);
+	
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"AsdStaInfoToEAG \n");
+	if(sendto(TableSend, &msg, len, 0, (struct sockaddr *) &toEAG.addr, toEAG.addrlen) < 0){
+		asd_printf(ASD_DEFAULT,MSG_WARNING,"%s sendtoEAG %s\n",__func__,strerror(errno));
+		perror("send(AsdStaInfoToEAG)");
+		return -1;
+	}
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"STA.op = %d\n",msg.Op);
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"sta: "MACSTR"\n",MAC2STR(msg.STA.addr));
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"reason = %d\n",msg.STA.reason );
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"auth_type = %d\n",msg.STA.auth_type );
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"essid : %s\n",msg.STA.essid);
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"new_essid : %s\n",msg.STA.new_essid);
+	asd_printf(ASD_DEFAULT,MSG_DEBUG,"wtpid : %d, wtp_name: %s\n",wtpid,msg.STA.wtp_name);
+	return 0;
+
+	
+	
+}
+
 /* yjl add for mac_auth in tl. 2014-11-18 */
 int asd_init_tipc_sock(void)
 {
@@ -3700,7 +3788,8 @@ void asd_sta_roaming_management(struct sta_info *new_sta)
 		old_sta->acct_terminate_cause = RADIUS_ACCT_TERMINATE_CAUSE_USER_REQUEST;
 		AsdStaInfoToWID(owasd, old_sta->addr, WID_DEL);
 		if(ASD_NOTICE_STA_INFO_TO_PORTAL)
-			AsdStaInfoToEAG(owasd,old_sta,OPEN_ROAM);		
+			//AsdStaInfoToEAG(owasd,old_sta,OPEN_ROAM);		
+			AsdStaInfoToEAGRoaming(old_sta,new_sta,OPEN_ROAM);
 		if(ASD_WLAN[nwasd->WlanID]){
 			ASD_WLAN[nwasd->WlanID]->sta_roaming_times++;
 			ASD_WLAN[nwasd->WlanID]->r_num_sta++;

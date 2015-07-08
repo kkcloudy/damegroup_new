@@ -34,6 +34,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdint.h>
 #include "eag_def.h"
+#include "wcpss/waw.h"
 
 #define PORTAL_PORT_DEFAULT		2000
 
@@ -76,6 +77,12 @@ eag_portal_notify_logout(eag_portal_t * portal,
 int
 eag_portal_notify_logout_nowait(eag_portal_t * portal,
 		struct app_conn_t *appconn);
+
+int
+eag_portal_cross_area_roam(eag_portal_t * portal,
+		struct app_conn_t *appconn,
+		EagMsg *sta_msg);
+
 
 int
 eag_portal_proc_dm_request(eag_portal_t *portal,
