@@ -99,9 +99,14 @@ do
 		if [ -e $STATUS_PATH ];then
 			value=`cat $STATUS_PATH`
 			if [ x$value == x"start" ];then
-				sudo /opt/services/init/snmpd_init start >/dev/null 2>&1 &				
-				snmpexceprstarttimes=$(($snmpexceprstarttimes+1))
-				echo "snmp exception exit times is :"$snmpexceprstarttimes--"time is :"`date`>>/var/log/snmp_restart_times.log
+				ex_time_start="03:45:00"
+				ex_time_end="04:15:00"
+				ux_time=`date +%H:%M:%S`
+				if [[ "$ux_time" < "$ex_time_start" ]] || [[ "$ex_time_end" < "$ux_time" ]]; then
+					sudo /opt/services/init/snmpd_init start >/dev/null 2>&1 &				
+					snmpexceprstarttimes=$(($snmpexceprstarttimes+1))
+					echo "snmp exception exit times is :"$snmpexceprstarttimes--"time is :"`date`>>/var/log/snmp_restart_times.log
+				fi
 			fi
 		fi
 	fi
