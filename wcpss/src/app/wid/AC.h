@@ -1,6 +1,6 @@
 #ifndef AC_AC_H
 #define AC_AC_H
-
+#define MAX_DATE_SIZE 1024
 
 void LISTEN_IF_INIT();
 int get_dir_wild_file_count(char *dir, char *wildfile);
@@ -29,6 +29,15 @@ int wid_notice_asd_switch(unsigned int wtpid,unsigned int policy);
 			return (ret);	\
 		}	\
 	} while (0);
+
+#define WID_CHECK_WTP_STANDARD_RET(_wtpid_, ret)	\
+	do {	\
+		if (((_wtpid_) >= WTP_NUM) || ((_wtpid_) <= 0) || (NULL == AC_WTP[(_wtpid_)]))	\
+		{	\
+			wid_syslog_err("%s:%d wtp%d not exist\n", __func__, __LINE__, (_wtpid_));	\
+			return (ret);	\
+		}	\
+	} while (0);
 	
 
 #define WID_MALLOC_ERR()	\
@@ -46,6 +55,8 @@ int wid_notice_asd_switch(unsigned int wtpid,unsigned int policy);
 		}	\
 	} while (0);
 
-	
+unsigned int get_file_size(const char *path);
+int md5_hash(char *path, unsigned char *md5);
+unsigned long int HexToDec(unsigned char *hex);	
 
 #endif

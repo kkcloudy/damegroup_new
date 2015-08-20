@@ -120,6 +120,7 @@ unsigned char gmacfilterflag = 0;
 unsigned char gessidfilterflag = 0;
 extern unsigned int sample_infor_interval;
 extern unsigned char gWIDLOGHN;//qiuchen
+extern enum wtp_upgrade_mode g_wtp_upgrade_mode;
 int wid_dbug_trap_ssid_key_conflict(unsigned int wtpid,unsigned char radio_l_id, unsigned char wlan1, unsigned char wlan2);
 extern WID_WIFI_LOCATE_CONFIG_GROUP *WIFI_LOCATE_CONFIG_GROUP[WIFI_LOCATE_CONFIG_GROUP_SIZE];
 extern unsigned int ip_long2str(unsigned long ipAddress,unsigned char **buff);
@@ -139,6 +140,53 @@ int setWtpNoRespToStaProReq(unsigned int wtpid,unsigned char l_radioid,unsigned 
 int setWtpUniMutiBroCastIsolation(unsigned int wtpid,unsigned char radioid,unsigned char wlanid,unsigned char policy);
 int setWtpUniMutiBroCastRate(unsigned int wtpid,unsigned char radioid,unsigned char wlanid,unsigned int rate);
 void free_maclist(struct acl_config *conf, struct maclist *list);
+
+int wtp_upgrade_init(struct wtp_upgrade *upgrade)
+{
+	if (NULL == upgrade)
+	{
+		return -1;
+	}
+
+	memset(upgrade, 0, sizeof(struct wtp_upgrade));
+	upgrade->state = WTP_UPGRADE_STATE_DONE;
+	upgrade->mode = g_wtp_upgrade_mode;
+
+	return 0;
+}
+
+int wtp_upgrade_reinit(struct wtp_upgrade *upgrade)
+{
+	if (NULL == upgrade)
+	{
+		return -1;
+	}
+
+	if (NULL != upgrade->fp)
+	{
+		fclose(upgrade->fp);
+		upgrade->fp = NULL;
+	}
+
+	upgrade->state = WTP_UPGRADE_STATE_DONE;
+	upgrade->pktcnt = 0;
+
+	return 0;
+}
+
+void wid_set_upgrade_state(struct wtp_upgrade *upgrade, enum wtp_upgrade_state state)
+{
+	if (NULL == upgrade)
+	{
+		return;
+	}
+
+	upgrade->state = state;
+
+	return;
+}
+
+
 
 CWBool check_wtpid_func(unsigned int WTPID){
 	if(WTPID >= WTP_NUM){
@@ -1966,6 +2014,8 @@ int WID_CREATE_NEW_WTP(char *WTPNAME, unsigned int WTPID, unsigned char* WTPSN, 
     AC_WTP[WTPID]->ntp_trap_flag = 0;/*zhaoruijia,20100904,transplant ACTIMESYNCHROFAILURE from 1.2omc to 1.3*/
 
 	AC_WTP[WTPID]->radio_5g_sw = g_radio_5g_sw;
+		wtp_upgrade_init(&AC_WTP[WTPID]->upgrade);
+
 	
 		/*
 		if((AC_WLAN[k] != NULL)&&(AC_WLAN[k]->Status == 0))

@@ -2977,6 +2977,13 @@ CWBool CWAddAC_ATTACH_For_Auto(CWNetworkLev4Address *addrPtr, unsigned int WTPID
 
 }
 
+char *CWProtocolGetRawBytes(CWProtocolMessage *msgPtr, char *val, int len) 
+{
+	CW_COPY_MEMORY(val, &((msgPtr->msg)[(msgPtr->offset)]), len);
+	(msgPtr->offset) += len;
+	
+	return val;
+}
 
 //added by weiay 20080617
 CWBool CWWTPMatchBindingInterface(int wtpid,int bindingSystemIndex)
@@ -4625,6 +4632,38 @@ CWBool  CWAssembleWtpStaFlowInformationreport(CWProtocolMessage *msgPtr,int wtpi
 	return CWAssembleMsgElemVendor(msgPtr, CW_MSG_ELEMENT_VENDOR_SPEC_PAYLOAD_CW_TYPE);
 
 }
+
+CWBool CWAssembleMsgElemWTPUpgradeMode(CWProtocolMessage *msgPtr, unsigned char mode)
+{
+/*
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|		  element				|		   len					|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|	  mode   	|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+*/
+
+	short int elementid = CW_VENDOR_SPEC_ELEMENT_UPGRADE_MODE; 
+	short int length = 5;
+	
+	if (msgPtr == NULL) 
+	{
+		return CWErrorRaise(CW_ERROR_WRONG_ARG, NULL);	
+	}
+	
+	CW_CREATE_PROTOCOL_MESSAGE(*msgPtr, length, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+	
+	CWProtocolStore16(msgPtr, elementid); 
+	CWProtocolStore16(msgPtr, (length-4));	
+
+	CWProtocolStore8(msgPtr, mode);
+
+	wid_syslog_debug_debug(WID_DEFAULT,"%s: elemid: %d elemlen: %d mode: %d\n", 
+						__func__,elementid,length,mode);
+		
+	return CWAssembleMsgElemVendor(msgPtr, CW_MSG_ELEMENT_VENDOR_SPEC_PAYLOAD_CW_TYPE);
+}
+
 
 CWBool CWAssembleWifiLocatePublicConfig
 (

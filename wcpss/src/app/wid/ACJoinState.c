@@ -37,10 +37,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef DMALLOC
 #include "../dmalloc-5.5.0/dmalloc.h"
 #endif
+int wtp_upgrade_init_hash(unsigned int wtpid, char *ImageName, char *version);
 
-CWBool CWAssembleJoinResponse(CWProtocolMessage **messagesPtr, int *fragmentsNumPtr, int PMTU, int seqNum, CWList msgElemList,char *strVersion);
+CWBool CWAssembleJoinResponse
+(
+	CWProtocolMessage **messagesPtr,
+	int *fragmentsNumPtr,
+	int PMTU,
+	int seqNum,
+	CWList msgElemList,
+	char *strVersion,
+	CWProtocolJoinResponseValues *joinResponseVal,
+	enum wtp_upgrade_mode upgrade_mode;
+);
 CWBool CWParseJoinRequestMessage(char *msg, int len, int *seqNumPtr, CWProtocolJoinRequestValues *valuesPtr, int WTPIndex);
 CWBool CWSaveJoinRequestMessage(CWProtocolJoinRequestValues *joinRequest, CWWTPProtocolManager *WTPProtocolManager,unsigned int WTPIndex);
+void CWDestroyJoinRequestValues(CWProtocolJoinRequestValues *valPtr);
+CWBool CWAssembleMsgElemImageIdentifier(CWProtocolMessage *msgPtr, 
+	CWImageIdentifier_cw *ImageIdentifier);
+int wid_md5_hash(char *path, unsigned char *md5);
 
 
 CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
@@ -75,6 +90,8 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 			return CW_FALSE;
 		}
 	}
+	enum wtp_upgrade_mode upgrade_mode = AC_WTP[WTPIndex]->upgrade.mode;
+//	wid_syslog_debug_debug(WID_WTPINFO,"%s: upgrade_mode %d\n", __func__, upgrade_mode);
 
 	CWBool ACIpv4List = CW_FALSE;
 	CWBool ACIpv6List = CW_FALSE;
@@ -349,7 +366,9 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 		} else {
 			//auto upgrade brunch
 			int do_check = 0;
-
+			wid_syslog_debug_debug(WID_WTPINFO,"**** ap model is %s ****\n",AC_WTP[WTPIndex]->WTPModel);	//for test
+			
+//			CWThreadMutexLock(&(gAllThreadMutex));
 			pVersionNode = gConfigVersionInfo;
 			tmpnode = gConfigVerInfo;
 			
@@ -408,21 +427,20 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 										str_ac_version = codenode->str_ap_version_name;
 										aclen = strlen(codenode->str_ap_version_name);
 										
-										wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: code match:aclen=%d len=%d\n", 
-											aclen, len);
-										
-										if((AC_WTP[WTPIndex]->codever == NULL)){
-											if((strlen(codenode->str_ap_version_name) == verlen)&&(strncasecmp(AC_WTP[WTPIndex]->ver,codenode->str_ap_version_name,verlen) == 0))
-											{
-												wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: match AC_WTP[WTPIndex]->ver=%s, codenode->str_ap_version_name=%s, match\n", 
-													AC_WTP[WTPIndex]->ver, codenode->str_ap_version_name);
-												bMatchVersion = CW_TRUE;
-												break;
-											} else {
-												wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: not match AC_WTP[WTPIndex]->ver=%s, codenode->str_ap_version_name=%s, not match\n", 
-													AC_WTP[WTPIndex]->ver, codenode->str_ap_version_name);
-											}
-										} else if((aclen == len)&&(strncasecmp(AC_WTP[WTPIndex]->codever,codenode->str_ap_version_name,len) == 0)) {
+									wid_syslog_debug_debug(WID_WTPINFO,"ac surport version:%s\n",str_ac_version);
+									wid_syslog_debug_debug(WID_WTPINFO,"** AC version name len:%d   WTP version name len:%d **\n",aclen,len);
+									
+									if((AC_WTP[WTPIndex]->codever == NULL)){						
+										if((strlen(codenode->str_ap_version_name) == verlen)&&(strncasecmp(AC_WTP[WTPIndex]->ver,codenode->str_ap_version_name,verlen) == 0))
+										{
+											wid_syslog_debug_debug(WID_WTPINFO,"ap model match 222\n"); 	//for test
+											bMatchVersion = CW_TRUE;
+											break;
+										}
+									}
+									else if((aclen == len)&&(AC_WTP[WTPIndex]->codever != NULL)&&(strncasecmp(AC_WTP[WTPIndex]->codever,codenode->str_ap_version_name,len) == 0))
+									{
+										wid_syslog_debug_debug(WID_WTPINFO,"ap model match 333\n"); 	//for test
 											bMatchVersion = CW_TRUE;
 											str_ac_version = AC_WTP[WTPIndex]->ver;
 											wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: B2 wtp %d str_ac_version=%s match\n", 
@@ -481,7 +499,8 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 		}
 	}
 
-	//response for join request
+	CWProtocolJoinResponseValues joinResponseVal;
+	memset(&joinResponseVal, 0, sizeof(joinResponseVal));
 	if(bMatchVersion){
 		wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: A wtp %d str_ac_version=%s, no need to upgrade\n", 
 			WTPIndex, str_ac_version);
@@ -493,14 +512,46 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 	}else{
 		char ac_version[DEFAULT_LEN] = {" "};
 		memset(ac_version,0,DEFAULT_LEN);
-		sprintf(ac_version,"%s",str_ac_version);
-		wid_syslog_debug_debug(WID_WTPINFO, "wtp_upgrade: B wtp %d ac_version=%s, need to upgrade\n", 
-			WTPIndex, ac_version);
-		if(!(CWAssembleJoinResponse(&(gWTPs[WTPIndex].messages), &(gWTPs[WTPIndex].messagesCount), gWTPs[WTPIndex].pathMTU, seqNum, msgElemList,ac_version))){ // random session ID
+		
+		if ((WTP_UPGRADE_MODE_FTP == upgrade_mode)
+			|| (WTP_UPGRADE_MODE_TFTP == upgrade_mode))
+		{
+			sprintf(ac_version,"%s1",str_ac_version);
+		}
+		else if (WTP_UPGRADE_MODE_CAPWAP == upgrade_mode)
+		{
+			sprintf(ac_version,"%s1",str_ac_version);
+			
+			wtp_upgrade_init_hash(WTPIndex, NULL, str_ac_version);
+			strncpy(joinResponseVal.ImageIndentifier.version, ac_version, WTP_VERSION_LEN-1);			
+			joinResponseVal.ImageIndentifier.VersionLen = strlen(joinResponseVal.ImageIndentifier.version);
+
+			/* TODO */
+			snprintf(joinResponseVal.ImageIndentifier.ImageName, WTP_IMAGENAME_LEN, "%s.img", "wtp");			
+			joinResponseVal.ImageIndentifier.ImageNameLen = strlen(joinResponseVal.ImageIndentifier.ImageName);
+
+			snprintf(joinResponseVal.ImageIndentifier.Model, WTP_MODE_LEN, "%s", str_wtp_model);			
+			joinResponseVal.ImageIndentifier.ModelLen = strlen(joinResponseVal.ImageIndentifier.Model);
+			
+		}
+		else if(WTP_UPGRADE_MODE_NONE == upgrade_mode)
+		{
+			sprintf(ac_version,"%s1",str_ac_version);
+		}
+		else
+		{
+			wid_syslog_err("wtp%d upgrade mode error %d\n",WTPIndex, AC_WTP[WTPIndex]->upgrade.mode);
+		}
+		
+		wid_syslog_info("wtp%d upgrade mode %d version %s model %s\n",WTPIndex, AC_WTP[WTPIndex]->upgrade.mode, ac_version, str_wtp_model);
+		if(!(CWAssembleJoinResponse(&(gWTPs[WTPIndex].messages), &(gWTPs[WTPIndex].messagesCount),
+				gWTPs[WTPIndex].pathMTU, seqNum, msgElemList,ac_version, &joinResponseVal, upgrade_mode)))
+		{ // random session ID
 			CWDeleteList(&msgElemList, CWProtocolDestroyMsgElemData);
 			wid_syslog_err("wtp_upgrade: exception return %s %d\n", __FUNCTION__, __LINE__);
 			return CW_FALSE;
 		}
+		AC_WTP[WTPIndex]->upgrade.state = WTP_UPGRADE_STATE_JOIN;
 	}
 	CWDeleteList(&msgElemList, CWProtocolDestroyMsgElemData);
 	
@@ -561,11 +612,21 @@ CWBool ACEnterJoin(int WTPIndex, CWProtocolMessage *msgPtr)
 }
 
 // assemble Join Response
-CWBool CWAssembleJoinResponse(CWProtocolMessage **messagesPtr, int *fragmentsNumPtr, int PMTU, int seqNum, CWList msgElemList,char *strVersion)
+CWBool CWAssembleJoinResponse
+(
+	CWProtocolMessage **messagesPtr,
+	int *fragmentsNumPtr,
+	int PMTU,
+	int seqNum,
+	CWList msgElemList,
+	char *strVersion,
+	CWProtocolJoinResponseValues *joinResponseVal,
+	enum wtp_upgrade_mode upgrade_mode
+)
 {	
 	CWProtocolMessage *msgElems= NULL;
 	int msgElemCount = 0;
-	const int mandatoryMsgElemCount=4; 	//Result code is not included because it's already in msgElemList. Control IPv6 to be added
+	 int mandatoryMsgElemCount=4; 	//Result code is not included because it's already in msgElemList. Control IPv6 to be added
 	CWProtocolMessage *msgElemsBinding= NULL;
 	const int msgElemBindingCount=0;
 	int i;
@@ -574,21 +635,69 @@ CWBool CWAssembleJoinResponse(CWProtocolMessage **messagesPtr, int *fragmentsNum
 	if(messagesPtr == NULL || fragmentsNumPtr == NULL || msgElemList == NULL) return CWErrorRaise(CW_ERROR_WRONG_ARG, NULL);
 	
 	msgElemCount = CWCountElementInList(msgElemList);
-
-	CW_CREATE_PROTOCOL_MSG_ARRAY_ERR(msgElems, msgElemCount+mandatoryMsgElemCount, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
-	wid_syslog_debug_debug(WID_WTPINFO,"Assembling Join Response...");
 	
-	if((!(CWAssembleMsgElemACDescriptor(&(msgElems[++k])))) ||
-	   (!(CWAssembleMsgElemACName(&(msgElems[++k])))) ||
-	   (!(CWAssembleMsgElemWTPVersion(&(msgElems[++k]),strVersion))) || //added by weiay 20080618
-	   (!(CWAssembleMsgElemCWControlIPv4Addresses(&(msgElems[++k]),0)))//zhanglei set wtpid 0 in join	  
-	){
-		CWErrorHandleLast();
-		int i;
-		for(i = 0; i <= k; i++) {CW_FREE_PROTOCOL_MESSAGE(msgElems[i]);}
-		CW_FREE_OBJECT_WID(msgElems);
-		return CW_FALSE; // error will be handled by the caller
-	} 
+//	wid_syslog_debug_debug(WID_WTPINFO,"upgrade_mode %d\n", upgrade_mode);
+	if (WTP_UPGRADE_MODE_CAPWAP == upgrade_mode)
+	{
+		mandatoryMsgElemCount++;
+		
+		CW_CREATE_PROTOCOL_MSG_ARRAY_ERR(msgElems, msgElemCount+mandatoryMsgElemCount, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+		wid_syslog_debug_debug(WID_WTPINFO,"Assembling Join Response elem cunt %d\n", mandatoryMsgElemCount);
+		
+		
+		if((!(CWAssembleMsgElemACDescriptor(&(msgElems[++k]))))
+			|| (!(CWAssembleMsgElemACName(&(msgElems[++k]))))
+			|| (!(CWAssembleMsgElemWTPUpgradeMode(&(msgElems[++k]), upgrade_mode)))
+			|| (!(CWAssembleMsgElemImageIdentifier(&(msgElems[++k]), &(joinResponseVal->ImageIndentifier))))
+			|| (!(CWAssembleMsgElemCWControlIPv4Addresses(&(msgElems[++k]),0)))	//zhanglei set wtpid 0 in join	  
+			)
+		{
+			CWErrorHandleLast();
+			int i;
+			for(i = 0; i <= k; i++) {CW_FREE_PROTOCOL_MESSAGE(msgElems[i]);}
+			CW_FREE_OBJECT(msgElems);
+			return CW_FALSE; // error will be handled by the caller
+		}		
+	}
+	else if(WTP_UPGRADE_MODE_FTP == upgrade_mode
+		   ||WTP_UPGRADE_MODE_TFTP == upgrade_mode)
+	{
+		mandatoryMsgElemCount++;
+		
+		CW_CREATE_PROTOCOL_MSG_ARRAY_ERR(msgElems, msgElemCount+mandatoryMsgElemCount, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+		wid_syslog_debug_debug(WID_WTPINFO,"Assembling Join Response...");
+		
+		if((!(CWAssembleMsgElemACDescriptor(&(msgElems[++k])))) ||
+		   (!(CWAssembleMsgElemACName(&(msgElems[++k])))) ||
+		   (!(CWAssembleMsgElemWTPUpgradeMode(&(msgElems[++k]), upgrade_mode))) ||
+		   (!(CWAssembleMsgElemWTPVersion(&(msgElems[++k]),strVersion))) || //added by weiay 20080618
+		   (!(CWAssembleMsgElemCWControlIPv4Addresses(&(msgElems[++k]),0)))//zhanglei set wtpid 0 in join	  
+			)
+		{
+			CWErrorHandleLast();
+			int i;
+			for(i = 0; i <= k; i++) {CW_FREE_PROTOCOL_MESSAGE(msgElems[i]);}
+			CW_FREE_OBJECT(msgElems);
+			return CW_FALSE; // error will be handled by the caller
+		} 
+	}
+	else if(WTP_UPGRADE_MODE_NONE == upgrade_mode)
+	{
+		CW_CREATE_PROTOCOL_MSG_ARRAY_ERR(msgElems, msgElemCount+mandatoryMsgElemCount, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+		wid_syslog_debug_debug(WID_WTPINFO,"Assembling Join Response...");
+		
+		if((!(CWAssembleMsgElemACDescriptor(&(msgElems[++k])))) ||
+		   (!(CWAssembleMsgElemACName(&(msgElems[++k])))) ||
+		   (!(CWAssembleMsgElemWTPVersion(&(msgElems[++k]),strVersion))) ||
+		   (!(CWAssembleMsgElemCWControlIPv4Addresses(&(msgElems[++k]),0)))	  
+		){
+			CWErrorHandleLast();
+			int i;
+			for(i = 0; i <= k; i++) {CW_FREE_PROTOCOL_MESSAGE(msgElems[i]);}
+			CW_FREE_OBJECT(msgElems);
+			return CW_FALSE; // error will be handled by the caller
+		} 
+	}
 
 	current=msgElemList;
 	for (i=0; i<msgElemCount; i++)
@@ -775,6 +884,10 @@ CWBool CWSaveJoinRequestMessage (CWProtocolJoinRequestValues *joinRequest, CWWTP
 			AC_WTP[WTPIndex]->ver = NULL;
 			CW_FREE_OBJECT_WID(((WTPProtocolManager->descriptor.vendorInfos).vendorInfos)[i].ver);
 		}
+		else if(((WTPProtocolManager->descriptor.vendorInfos).vendorInfos)[i].type == CW_BOOT_VERSION)
+		{
+			CW_FREE_OBJECT(((WTPProtocolManager->descriptor.vendorInfos).vendorInfos)[i].valuePtr);
+		}
 		else
 		{
 			CW_FREE_OBJECT_WID(((WTPProtocolManager->descriptor.vendorInfos).vendorInfos)[i].valuePtr);
@@ -801,3 +914,277 @@ CWBool CWSaveJoinRequestMessage (CWProtocolJoinRequestValues *joinRequest, CWWTP
 	wid_syslog_debug_debug(WID_WTPINFO,"Join Request Saved");
 	return CW_TRUE;
 }
+void CWDestroyJoinRequestValues(CWProtocolJoinRequestValues *valPtr) 
+{
+	int i = 0;
+	
+	if(NULL == valPtr) 
+	{
+		return;
+	}
+	
+	CW_FREE_OBJECT(valPtr->location);
+	CW_FREE_OBJECT(valPtr->name);
+	if(NULL != (valPtr->WTPDescriptor.vendorInfos).vendorInfos)
+	{
+		for(i = 0; i < (valPtr->WTPDescriptor.vendorInfos).vendorInfosCount; i++)
+		{
+			if(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].type == CW_WTP_HARDWARE_VERSION)
+			{
+				CW_FREE_OBJECT(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].sysver);
+			}else if(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].type == CW_WTP_SOFTWARE_VERSION)
+			{
+				CW_FREE_OBJECT(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].ver);
+			}
+			else if(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].type == CW_BOOT_VERSION)
+			{
+				CW_FREE_OBJECT(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].valuePtr);
+			}
+			else
+			{
+				CW_FREE_OBJECT(((valPtr->WTPDescriptor.vendorInfos).vendorInfos)[i].valuePtr);
+			}
+		}		
+		CW_FREE_OBJECT((valPtr->WTPDescriptor.vendorInfos).vendorInfos);
+	}
+
+	if(NULL != valPtr->WTPBoardData.vendorInfos)
+	{
+		for(i = 0; i < valPtr->WTPBoardData.vendorInfosCount; i++) 
+		{
+			if((valPtr->WTPBoardData.vendorInfos)[i].type == CW_WTP_MODEL_NUMBER)
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].model);
+			}else if((valPtr->WTPBoardData.vendorInfos)[i].type == CW_WTP_SERIAL_NUMBER)
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].SN);
+			}else if((valPtr->WTPBoardData.vendorInfos)[i].type == CW_BOARD_MAC_ADDRESS)
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].mac);
+			}else if((valPtr->WTPBoardData.vendorInfos)[i].type == CW_WTP_REAL_MODEL_NUMBER)
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].Rmodel);
+			}else if((valPtr->WTPBoardData.vendorInfos)[i].type == CW_WTP_CODE_VERSION)
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].codever);
+			}
+			else
+			{
+				CW_FREE_OBJECT((valPtr->WTPBoardData.vendorInfos)[i].valuePtr);
+			}
+		}		
+		CW_FREE_OBJECT(valPtr->WTPBoardData.vendorInfos);
+	}
+
+}
+
+CWBool CWAssembleMsgElemImageIdentifier
+(
+	CWProtocolMessage *msgPtr, 
+	CWImageIdentifier_cw *ImageIdentifier
+)
+{
+	short length = 0;  
+
+	if ((NULL == msgPtr) || (NULL == ImageIdentifier))
+	{
+		return CWErrorRaise(CW_ERROR_WRONG_ARG, NULL);
+	} 
+
+	length = 4 + ((4 + ImageIdentifier->ImageNameLen)
+			   + (4 + ImageIdentifier->VersionLen)
+			   + (4 + ImageIdentifier->ModelLen));
+	
+	wid_syslog_debug_debug(WID_WTPINFO,"%s image %s len %d version %s %d model %s len %d\n",
+						__func__, 
+						ImageIdentifier->ImageName, ImageIdentifier->ImageNameLen,
+						ImageIdentifier->version, ImageIdentifier->VersionLen, 
+						ImageIdentifier->Model, ImageIdentifier->ModelLen);
+	CW_CREATE_PROTOCOL_MESSAGE(*msgPtr, length, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+
+//	wid_syslog_debug_debug(WID_WTPINFO,"%s:%d\n", __func__, __LINE__);
+
+	
+	CWProtocolStore32(msgPtr, CW_MSG_ELEMENT_VENDOR_IDENTIFIER);
+ 
+	CWProtocolStore16(msgPtr, CW_IMAGEIDENTIFIER_IMAGENAME);
+	CWProtocolStore16(msgPtr, ImageIdentifier->ImageNameLen);
+	CWProtocolStoreStr(msgPtr, ImageIdentifier->ImageName);
+ 
+	CWProtocolStore16(msgPtr, CW_IMAGEIDENTIFIER_VERSION);
+	CWProtocolStore16(msgPtr, ImageIdentifier->VersionLen);
+	CWProtocolStoreStr(msgPtr, ImageIdentifier->version);
+
+	CWProtocolStore16(msgPtr, CW_IMAGEIDENTIFIER_MODE);
+	CWProtocolStore16(msgPtr, ImageIdentifier->ModelLen);
+	CWProtocolStoreStr(msgPtr, ImageIdentifier->Model);
+
+//	wid_syslog_debug_debug(WID_WTPINFO,"%s:%d\n", __func__, __LINE__);
+
+	
+	return CWAssembleMsgElem(msgPtr, CW_MSG_ELEMENT_IMAGE_IDENTIFIER_CW_TYPE);
+}
+
+unsigned long int HexToDec(unsigned char *hex)
+{
+	char *tmp=(char *)hex;
+	unsigned int dec=0;
+	//int m = 0;
+	//printf("tmp:%p\n");
+	while (*tmp)
+	{
+		//m++;
+		//printf("$m:%d$",m);
+		dec<<=4;
+		//printf("$dec:%d$",dec);
+		if (*tmp&16) dec+=*tmp++&15;
+		else dec+=(*tmp++&15)+9;
+	}
+	//printf("dec:%d\n",dec);
+	return dec;
+}
+
+unsigned int get_file_size(const char *path)
+{
+	unsigned int size = 0;
+	FILE *fp = NULL;
+
+	fp = fopen(path, "rb");
+	if(NULL == fp)
+	{
+		wid_syslog_err("%s Open file %s failed.", path, strerror(errno));
+		return 0;
+	}
+
+	fseek(fp, SEEK_SET, SEEK_END);
+	size = ftell(fp);
+	fclose(fp);
+	
+	wid_syslog_debug_debug(WID_DEFAULT, "Size of file %s size %d bytes\n", path, size);
+	
+	return size;
+}
+
+int md5_hash(char *path, unsigned char *md5)
+{
+	char cmd[256] = {0};
+	char buf[256] = {0};
+	FILE *fp = 	NULL;
+
+	snprintf(cmd, sizeof(cmd), "sor.sh imgmd5 %s 120", path);
+	wid_syslog_debug("%s %s\n", __func__, cmd);
+
+	fp = popen(cmd, "r");
+	if (NULL == fp)
+	{
+		wid_syslog_err("%s popen %s failed %s\n", __func__, path, strerror(errno));
+		return -1;
+	}	
+	fgets(buf, sizeof(buf)-1, fp);	
+	pclose(fp);
+	fp = NULL;
+
+	char *p = NULL;
+	p = strstr(buf, "= ");
+	if (NULL == p)
+	{
+		wid_syslog_err("%s get md5 string error\n", __func__);
+		return -1;
+	}
+	p +=2;	/* stip string "= " */
+
+	unsigned char a[3];
+	int i = 0;
+	unsigned long ul = 0;
+	
+	memset(md5, 0, WID_MD5_LEN);
+	
+	for(i = 0; i < 32; i = i + 2)
+	{
+		memset(a, 0, sizeof(a));
+		strncpy((char *)a, p+i, 2);
+		ul = HexToDec(a);
+		md5[i/2] = ul;
+	}
+	
+	wid_syslog_debug("%02x %02x %02x %02x %02x %02x %02x %02x\n",
+		md5[0], md5[1], md5[2], md5[3], md5[4], md5[5], md5[6], md5[7]);
+
+	wid_syslog_debug("%02x %02x %02x %02x %02x %02x %02x %02x\n",
+		md5[8], md5[9], md5[10], md5[11], md5[12], md5[13], md5[14], md5[15]);
+
+	#if 0
+	ret = pclose(fp);
+	
+	switch (WEXITSTATUS(ret)) 
+	{
+		case 0:
+			wid_syslog_info("%s,%s\n",__func__, md5);
+			return 0;
+		case 1:
+			wid_syslog_info("Sysetm internal error (1).\n");
+			break;
+		case 2:
+			wid_syslog_info("Sysetm internal error (2).\n");
+			break;
+		case 3:
+			wid_syslog_info("Storage media is busy.\n");
+			break;
+		case 4:
+			wid_syslog_info("Storage operation time out.\n");
+			break;
+		case 5:
+			wid_syslog_info("No left space on storage media.\n");
+			break;
+		default:
+			wid_syslog_info("Sysetm internal error (3).\n");
+			break;
+		}
+	#endif
+	
+	return 0;
+}
+
+int wid_md5_hash(char *path, unsigned char *md5)
+{
+	unsigned char buf[WID_MD5_LEN] = {0};
+
+	if (md5_hash(path, buf) < 0)
+	{
+		return -1;
+	}
+
+	memcpy(md5, buf, WID_MD5_LEN);
+	
+	return 0;
+}
+
+
+int wtp_upgrade_init_hash(unsigned int wtpid, char *ImageName, char *version)
+{
+	char path[128] = {0};
+	
+	/* init upgrade image name */
+	if (NULL != version)
+	{
+		strncpy(AC_WTP[wtpid]->upgrade.version, version, WTP_VERSION_LEN-1);
+	}
+
+	if (NULL != ImageName)
+	{
+		strncpy(AC_WTP[wtpid]->upgrade.ImageName, ImageName, WTP_IMAGENAME_LEN-1);
+		
+		snprintf(path, sizeof(path), "/mnt/wtp/%s", ImageName);
+		
+		AC_WTP[wtpid]->upgrade.filesize = get_file_size(path);
+		wid_md5_hash(path, AC_WTP[wtpid]->upgrade.hash);
+		AC_WTP[wtpid]->upgrade.state = WTP_UPGRADE_STATE_INITMD5;
+		
+		wid_syslog_debug("wtp%d init md5 hash image %s size %d\n", 
+			wtpid, ImageName, AC_WTP[wtpid]->upgrade.filesize);
+	}
+
+	return 0;	
+}
+
+

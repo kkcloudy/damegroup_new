@@ -504,5 +504,6 @@ int update_license_req(int sockfd,struct sockaddr_in *addr);
 CWBool WidAsd_StationLeaveReport(unsigned int WTPID,unsigned int count,WIDStationInfo*valuesPtr);
 void syslog_wtp_log_hn(int WTPIndex, int login,unsigned int reason_code);//qiuchen
 CWBool AsdWsm_WLANOp_essid(unsigned int RadioId,unsigned char WlanID, Operate op, int both);
+int wtp_upgrade_init_hash(unsigned int wtpid, char *ImageName, char *version);
 
 #endif

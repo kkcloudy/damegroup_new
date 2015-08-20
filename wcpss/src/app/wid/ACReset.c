@@ -42,7 +42,8 @@ extern unsigned char gWIDLOGHN;//qiuchen
 
 extern char *ip_value1;//lilong add
 extern char *ip_value2;//lilong add
-
+extern CWBool CWAssembleMsgElemImageIdentifier(CWProtocolMessage *msgPtr, 
+	CWImageIdentifier_cw *ImageIdentifier); 
 CWBool CWAssembleResetRequestMessage(CWProtocolMessage **messagesPtr, int *fragmentsNumPtr, int PMTU, int seqNum, CWImageIdentifier *resPtr){
 	
 		CWProtocolMessage *msgElems = NULL;
@@ -71,6 +72,54 @@ CWBool CWAssembleResetRequestMessage(CWProtocolMessage **messagesPtr, int *fragm
 		return CW_TRUE;
 }
 
+
+CWBool CWAssembleResetRequestMessage_cw
+(
+	CWProtocolMessage **messagesPtr, 
+	int *fragmentsNumPtr, 
+	int PMTU, 
+	unsigned char  seqNum,
+	CWImageIdentifier_cw *resPtr
+)
+{
+	
+		CWProtocolMessage *msgElems = NULL;
+		CWProtocolMessage *msgElemsBinding = NULL;
+		const int MsgElemCount=1;
+		int msgElemBindingCount=0;
+		int k = -1;
+		int i = 0;
+		
+		if (messagesPtr == NULL || fragmentsNumPtr == NULL)
+		{
+			return CWErrorRaise(CW_ERROR_WRONG_ARG, NULL);
+		}
+		
+	//	wid_syslog_debug_debug(WID_WTPINFO,"Assembling Reset...\n");
+		CW_CREATE_PROTOCOL_MSG_ARRAY_ERR(msgElems, MsgElemCount, return CWErrorRaise(CW_ERROR_OUT_OF_MEMORY, NULL););
+		
+		/*Assemble Message Elements*/
+		if (!(CWAssembleMsgElemImageIdentifier(&(msgElems[++k]), resPtr)))
+		{
+			for(i = 0; i <= k; i++) 
+			{
+				CW_FREE_PROTOCOL_MESSAGE(msgElems[i]);
+			}
+			CW_FREE_OBJECT(msgElems);
+			return CW_FALSE; 
+		}
+				
+		//wid_syslog_debug_debug("~~~~~ msg count: %d ", msgElemBindingCount);
+		
+		if(!(CWAssembleMessage(messagesPtr, fragmentsNumPtr, PMTU, seqNum, CW_MSG_TYPE_VALUE_RESET_REQUEST, msgElems, MsgElemCount, msgElemsBinding, msgElemBindingCount, CW_PACKET_CRYPT))) 
+		{
+			return CW_FALSE;
+		}
+	
+//		wid_syslog_debug_debug(WID_WTPINFO,"Reset request Assembled\n");
+		
+		return CW_TRUE;
+}
 
 CWBool ACEnterReset(int WTPIndex, CWProtocolMessage *msgPtr)
 {

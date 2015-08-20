@@ -10,6 +10,15 @@
 #define WTP_WTP "wtp config\n"
 #define WTP_SET "set wtp configuration\n"
 /* Huangleilei copy end */
+ 
+#define WTP_WTP 		"wtp config\n"
+#define WTP_SET   		"set wtp configuration\n"
+#define WTP_STR   		"wtp service\n"
+#define AC_WTP_LIST 	"wtp-list : for example 4,8,14\n"
+#define WTPID_STR 		"WTP ID : for example 4 \n"
+#define WTP_LIST_STR 	"wtp-list : for example 4,8,16\n"
+
+#define WTP_UPDATE_MODE 			"wtp update mode\n"
 
 typedef struct
 {

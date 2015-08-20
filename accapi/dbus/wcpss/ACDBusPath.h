@@ -264,6 +264,7 @@ char WID_DBUS_WTP_METHOD_SHOW_WTP_WIDS_SET[PATH_LEN]=      "show_ap_wids_set";
 char WID_DBUS_WTP_METHOD_SHOW_DHCP_FLOODING_STATUS_SET[PATH_LEN]=		"show_ap_dhcp_flooding_status_set";
 char WID_DBUS_WTP_METHOD_SET_DHCP_FLOODING_STATUS_SET[PATH_LEN]=		"set_ap_dhcp_flooding_status_set";
 
+char WID_DBUS_WTP_METHOD_SET_UPGRADE_MODE[PATH_LEN]=   "set_wtp_upgrade_mode";
 /*20130617 end*/
 char WID_DBUS_WTP_METHOD_SET_WTP_IF_INFO_REPORTINTERVAL[PATH_LEN]=      "set_ap_if_infomation_reportinterval";
 char WID_DBUS_WTP_METHOD_SET_WTP_INTERFACE_UPDOWN[PATH_LEN]=      "set_ap_interface_updown";

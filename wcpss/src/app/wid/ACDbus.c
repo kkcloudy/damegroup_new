@@ -14090,6 +14090,146 @@ DBusMessage * set_wtp_trap_ignore_percent(DBusConnection *conn, DBusMessage *msg
 
 }
 
+DBusMessage *wid_dbus_interface_set_wtplist_upgrade_mode
+(
+	DBusConnection *conn, 
+	DBusMessage *msg, 
+	void *user_data
+)
+{
+	DBusMessage *reply = NULL;
+	DBusMessageIter iter;
+	DBusError err;
+	int i = 0;
+	unsigned int wtp_cnt = 0;
+	unsigned int wtpid = 0;	
+	unsigned int ret = WID_DBUS_SUCCESS;
+	unsigned char mode = 0;
+	unsigned int *wtplist = NULL;
+	unsigned int err_num = 0;
+	struct res_head res_head;
+	wid_syslog_info("%s:%d \n",__func__, __LINE__);
+	dbus_error_init(&err);
+	
+	dbus_message_iter_init(msg,&iter);
+	
+	dbus_message_iter_get_basic(&iter, &mode);
+	dbus_message_iter_next(&iter);
+
+	dbus_message_iter_get_basic(&iter,&wtp_cnt);
+	dbus_message_iter_next(&iter);
+
+	wid_syslog_debug_debug(WID_DBUS,"%s:%d mode %d wtp cnt %d\n",
+						__func__, __LINE__, mode, wtp_cnt);
+   	if (wtp_cnt > 0)
+	{
+		wtplist = (unsigned int *)malloc(sizeof(unsigned int) * wtp_cnt);
+		
+		for (i = 0; i < wtp_cnt; i++) 
+		{			
+			dbus_message_iter_get_basic(&iter, &wtplist[i]);
+			dbus_message_iter_next(&iter);	
+		}
+	}
+	else
+	{	
+		wtp_cnt = WTP_NUM;
+		wtplist = (unsigned int *)malloc(sizeof(unsigned int) * wtp_cnt);
+		
+		for (i = 0; i < wtp_cnt; i++) 
+		{			
+			wtplist[i]	= i;
+		}
+	}
+
+	res_head.node = (struct res_node *)malloc(sizeof(struct res_node) * wtp_cnt);
+	if (!res_head.node)
+	{
+		ret = WID_DBUS_ERROR;
+		res_head.num = 0;
+		goto out;
+	}
+	memset(res_head.node, 0, sizeof(struct res_node) * wtp_cnt);
+	res_head.num = wtp_cnt;
+
+	for (i = 0; i < wtp_cnt; i++)
+	{
+		res_head.node[i].u.wtpid = wtplist[i];
+		wtpid = wtplist[i];
+		
+		if ((wtpid > WTP_NUM) ||(NULL == AC_WTP[wtpid]))
+		{
+			continue;
+		}
+		
+		if (AC_WTP[wtpid]->upgrade.state != WTP_UPGRADE_STATE_DONE)
+		{
+			res_head.node[i].res = UPGRADE_IS_WORKING;
+			err_num ++;
+			continue;
+		}
+		
+		switch(mode)
+		{
+			case WTP_UPGRADE_MODE_NONE:
+				AC_WTP[wtpid]->upgrade.mode = WTP_UPGRADE_MODE_NONE;
+				break;
+
+			case WTP_UPGRADE_MODE_CAPWAP:
+				AC_WTP[wtpid]->upgrade.mode = WTP_UPGRADE_MODE_CAPWAP;
+				break;
+				
+			case WTP_UPGRADE_MODE_FTP:
+				AC_WTP[wtpid]->upgrade.mode = WTP_UPGRADE_MODE_FTP;
+				break;
+
+			case WTP_UPGRADE_MODE_TFTP:
+				AC_WTP[wtpid]->upgrade.mode = WTP_UPGRADE_MODE_TFTP;
+				break;
+			default:
+				wid_syslog_err("%s:%d mode %d error\n",__func__, __LINE__, mode);
+		}
+	}
+	
+out:
+	reply = dbus_message_new_method_return(msg);
+
+	dbus_message_iter_init_append(reply, &iter);
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_UINT32, &ret);
+
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_UINT32, &(err_num));
+	
+	if (wtp_cnt > 0)
+	{
+		for (i = 0; (i < wtp_cnt) && (i < res_head.num); i++) 
+		{		
+			if(res_head.node[i].res !=0)
+			{
+				dbus_message_iter_append_basic(&iter, 
+					DBUS_TYPE_UINT32, &(res_head.node[i].u.wtpid));
+
+				dbus_message_iter_append_basic(&iter, 
+					DBUS_TYPE_UINT32, &(res_head.node[i].res));
+			}
+
+		}
+	}	
+
+	if (wtplist)
+	{
+		free(wtplist);
+		wtplist = NULL;
+	}
+	if (res_head.node)
+	{
+		free(res_head.node);
+		res_head.node = NULL;		
+		res_head.num = 0;
+	}
+	return reply;	
+}
+
+
 DBusMessage * wid_dbus_interface_show_ac_access_wtplist(DBusConnection *conn, DBusMessage *msg, void *user_data){
 	
 	DBusMessage* reply;	
@@ -86828,6 +86968,10 @@ static DBusHandlerResult wid_dbus_message_handler (DBusConnection *connection, D
 		else if (dbus_message_is_method_call(message,WID_DBUS_WTP_INTERFACE,WID_DBUS_SHOW_WTP_TIMING_UPGRADE_INFO)) 
 		{
 			reply = wid_dbus_interface_show_wtp_timing_upgrade_info(connection,message,user_data);
+		}
+		else if (dbus_message_is_method_call(message,WID_DBUS_WTP_INTERFACE,WID_DBUS_WTP_METHOD_SET_UPGRADE_MODE))
+		{
+			reply = wid_dbus_interface_set_wtplist_upgrade_mode(connection,message,user_data);
 		}
 	}
 	else if	(strcmp(dbus_message_get_path(message),WID_DBUS_RADIO_OBJPATH) == 0) {

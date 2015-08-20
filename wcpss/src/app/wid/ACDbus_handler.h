@@ -458,6 +458,7 @@ int wid_update_wtp_bss_infov2(int wtpid,unsigned int BSSIndex);
 CWBool oui_mac_filters(unsigned char *mac);
 void wid_set_wds_state(unsigned int wtpid, unsigned char radioid, unsigned char wlanid, unsigned char state);
 void wid_apstatsinfo_init(unsigned int WTPID);
+int wtp_upgrade_reinit(struct wtp_upgrade *upgrade);
 int wid_prase_heart_time_avarge(unsigned int wtpid);
 int wid_count_countermeasure_rogue_ap(Neighbor_AP_INFOS *paplist,int wtpid);
 int wid_modify_legal_essid(char *essid,char *essid_new);

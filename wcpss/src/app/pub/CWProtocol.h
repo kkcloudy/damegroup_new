@@ -298,6 +298,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	#define		CW_ECHO_INTERVAL_DEFAULT		10	//zhang lei time30 to 10
 #endif
 
+enum CWImageIdentifierVendorSpecificElements
+{
+	CW_IMAGEIDENTIFIER_IMAGENAME = 1,
+	CW_IMAGEIDENTIFIER_VERSION = 2,
+	CW_IMAGEIDENTIFIER_MODE = 3,
+};
 
 /*_________________________________________________________*/
 /*  *******************___VARIABLES___*******************  */

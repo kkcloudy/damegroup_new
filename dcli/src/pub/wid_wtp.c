@@ -19598,6 +19598,95 @@ void conflict_wtp_list_free(struct conflict_wtp_info *conflict_wtp)
 	return NULL;
 }
 
+unsigned int wid_set_wtplist_upgrade_mode
+(
+        unsigned int localid,
+	unsigned int index, 
+	update_wtp_list *wtplist, 
+	unsigned char mode, 
+	struct res_head *res_head,
+	DBusConnection *dcli_dbus_connection
+)
+{
+  	DBusMessage *query = NULL;
+	DBusMessage	*reply = NULL; 
+	DBusMessageIter iter;
+	DBusError err;
+
+	unsigned int res_num = 0;
+	unsigned int ret = 0;
+	int i = 0;
+	struct tag_wtpid *tmp_wtplist = NULL;
+
+	char BUSNAME[PATH_LEN] = {0};
+	char OBJPATH[PATH_LEN] = {0};
+	char INTERFACE[PATH_LEN] = {0};
+		
+	ReInitDbusPath_V2(localid,index,WID_DBUS_BUSNAME,BUSNAME);
+	ReInitDbusPath_V2(localid,index,WID_DBUS_WTP_OBJPATH,OBJPATH);
+	ReInitDbusPath_V2(localid,index,WID_DBUS_WTP_INTERFACE,INTERFACE);	
+
+	query = dbus_message_new_method_call(BUSNAME, OBJPATH, INTERFACE,
+								WID_DBUS_WTP_METHOD_SET_UPGRADE_MODE);
+																												
+	dbus_error_init(&err);			
+	dbus_message_iter_init_append(query, &iter);
+
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_BYTE, &mode);
+
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_UINT32, &(wtplist->count));
+	
+	tmp_wtplist = wtplist->wtpidlist;
+	for(i = 0; ((i < wtplist->count) && (tmp_wtplist)); i++)
+	{
+		dbus_message_iter_append_basic (&iter,
+						DBUS_TYPE_UINT32, &(tmp_wtplist->wtpid));
+		
+		tmp_wtplist = tmp_wtplist->next;
+	}
+
+	reply = dbus_connection_send_with_reply_and_block(dcli_dbus_connection,query, -1,&err);
+
+	dbus_message_unref(query);
+	if (NULL == reply) 
+	{
+		printf("%% failed get reply.\n");
+		if (dbus_error_is_set(&err)) 
+		{
+			printf("%s raised: %s",err.name,err.message);
+			dbus_error_free(&err);
+		}
+		return WID_DBUS_ERROR;
+	}
+	dbus_message_iter_init(reply,&iter);
+	dbus_message_iter_get_basic(&iter, &ret);
+
+	dbus_message_iter_next(&iter); 
+	dbus_message_iter_get_basic(&iter, &res_num);
+
+	res_head->node = (struct res_node *)malloc(sizeof(struct res_node) * res_num);
+	if (!res_head->node)
+	{
+		dbus_message_unref(reply);	
+		return WID_DBUS_ERROR;
+	}
+	memset(res_head->node, 0, sizeof(struct res_node) * res_num);
+	res_head->num = res_num;
+
+	for (i = 0; i < res_num; i++)
+	{	
+		dbus_message_iter_next(&iter); 
+		dbus_message_iter_get_basic(&iter, &(res_head->node[i].u.wtpid));
+		
+		dbus_message_iter_next(&iter); 
+		dbus_message_iter_get_basic(&iter, &(res_head->node[i].res));
+	}
+
+	dbus_message_unref(reply);		
+	return ret;
+}
+
+
 
 #endif
 

@@ -169,6 +169,21 @@ typedef struct{
 } CWProtocolWTPEventRequestValues;
 
 
+typedef struct 
+{
+	int VersionLen;
+	char version[WTP_VERSION_LEN];
+	int ImageNameLen;
+	char ImageName[WTP_IMAGENAME_LEN];
+	int ModelLen;
+	char Model[WTP_MODE_LEN];
+}CWImageIdentifier_cw;	/* capwap upgrade */
+
+
+typedef struct {
+	CWImageIdentifier_cw ImageIndentifier;	
+} CWProtocolJoinResponseValues;
+
 /*__________________________________________________________*/
 /*  *******************___PROTOTYPES___*******************  */
 CWBool CWParseChangeStateEventRequestMessage (char *msg, int len, int *seqNumPtr, CWProtocolChangeStateEventRequestValues *valuesPtr);
@@ -317,6 +332,8 @@ CWBool CWAssembleMsgElemAPSetCPEChannelIntf(CWProtocolMessage *msgPtr, unsigned 
 CWBool CWAssembleMsgElemRadiosetMGMTratebasewlan(CWProtocolMessage *msgPtr, unsigned char radioId,unsigned char wlanId,unsigned int rate);
 CWBool CWAssembleMsgElemWTPlanvlan(CWProtocolMessage *msgPtr, 
 	unsigned char state, unsigned short vlanid); //lilong add 2014.09.15
+CWBool CWAssembleMsgElemWTPUpgradeMode(CWProtocolMessage *msgPtr, unsigned char mode);
+char *CWProtocolGetRawBytes(CWProtocolMessage *msgPtr, char *val, int len);
 CWBool CWAssembleWifiLocatePublicConfig
 (
 	CWProtocolMessage *msgPtr,

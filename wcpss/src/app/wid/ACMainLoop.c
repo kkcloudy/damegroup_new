@@ -3208,6 +3208,7 @@ void CWDownWTP(unsigned int WTPIndex){
 	//release memory
 	/*initialization for apstatsinfo when wtp quit*/
 	wid_apstatsinfo_init(WTPIndex);		//xiaodawei add, 20110107
+	wtp_upgrade_reinit(&(AC_WTP[WTPIndex]->upgrade));
 	
 	memset(AC_WTP[WTPIndex]->longitude, '\0', LONGITUDE_LATITUDE_MAX_LEN);
 	memset(AC_WTP[WTPIndex]->latitude, '\0', LONGITUDE_LATITUDE_MAX_LEN);

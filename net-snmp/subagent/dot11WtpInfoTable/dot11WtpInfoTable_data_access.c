@@ -829,7 +829,7 @@ dot11WtpInfoTable_cache_load(netsnmp_container *container)
 		wtpCodeVersionInfo_len = MIN(strlen(q->wtpCodeVersionInfo), sizeof(rowreq_ctx->data.wtpCodeVersionInfo) - 1);
         rowreq_ctx->data.wtpCodeVersionInfo_len = wtpCodeVersionInfo_len * sizeof(rowreq_ctx->data.wtpCodeVersionInfo[0]);
         memcpy( rowreq_ctx->data.wtpCodeVersionInfo, q->wtpCodeVersionInfo, rowreq_ctx->data.wtpCodeVersionInfo_len );
-		snmp_log(LOG_ERR,"q->wtpCodeVersionInfo = %s  rowreq_ctx->data.wtpCodeVersionInfo = %s\n",(q->wtpCodeVersionInfo),(rowreq_ctx->data.wtpCodeVersionInfo));
+		/*snmp_log(LOG_ERR,"q->wtpCodeVersionInfo = %s  rowreq_ctx->data.wtpCodeVersionInfo = %s\n",(q->wtpCodeVersionInfo),(rowreq_ctx->data.wtpCodeVersionInfo));*/
 	}
         /*
          * insert into table container

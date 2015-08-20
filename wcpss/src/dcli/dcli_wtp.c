@@ -805,6 +805,40 @@ int parse_signedint_ID(char* str, int* ID)
 
 }
 
+int wtplist_add_node(update_wtp_list *list, unsigned int wtpid)
+{
+	struct tag_wtpid *tmp = NULL, *next = NULL;
+
+	if (!list || !wtpid)
+	{
+		return 0;
+	}
+
+	for (next = list->wtpidlist; next; next = next->next)
+	{
+		if (next->wtpid == wtpid)
+		{
+			return 0;
+		}
+	}
+	
+	tmp = (struct tag_wtpid*)malloc(sizeof(struct tag_wtpid));
+	if (!tmp)
+	{
+		return -1;
+	}
+	memset(tmp, 0, sizeof(struct tag_wtpid));
+	tmp->wtpid = wtpid;
+	tmp->next = NULL;
+
+	tmp->next = list->wtpidlist;
+	list->wtpidlist = tmp;
+	list->count++;
+	
+	printf("add wtpid %d \n", wtpid);
+
+	return 0;
+}
 
 
 DEFUN(show_wtp_model_infor_cmd_func,
@@ -42358,6 +42392,509 @@ DEFUN(wtp_set_web_report_ap_snr_range_cmd_func,
 	return CMD_SUCCESS;
 }
 
+
+DEFUN(set_upgrade_mode_cmd_func,
+		  set_upgrade_mode_cmd,
+		  "set update-mode (none|capwap|ftp|tftp)",
+		  WTP_SET
+		  WTP_UPDATE_MODE
+		  "no update mode\n"
+		  "update with capwap tunnel\n"
+		  "update with ftp\n"
+		  "update with tftp\n"
+	 )
+{	
+	int ret = 0;
+	unsigned int wtpid = 0;
+	unsigned int i = 0;
+	update_wtp_list *wtplist = NULL;
+	struct res_head res_head;
+    	int mode = 0;
+	int index = 0;
+	int localid = 1;
+	int slot_id = HostSlotId;
+	
+    if(vty->node == CONFIG_NODE)
+	{
+		index = 0;
+	}
+	else if(vty->node == HANSI_NODE)
+	{
+		index = vty->index;
+		localid = vty->local;
+		slot_id = vty->slotindex;
+	}
+	else if(vty->node == WTP_NODE)
+	{
+		index = 0;			
+		wtpid = (unsigned int)vty->index;
+	}
+	else if(vty->node == HANSI_WTP_NODE)
+	{
+		index = (unsigned int)vty->index; 		
+		wtpid = (unsigned int)vty->index_sub;
+		localid = vty->local;
+		slot_id = vty->slotindex;
+	}
+	else
+	{
+		vty_out(vty,"%% unsupport mode\n");
+		return CMD_WARNING;
+	}
+	
+	if (!strncmp("none", argv[0], strlen(argv[0])))
+	{
+		mode = 0;	
+	}
+	else if (!strncmp("capwap", argv[0], strlen(argv[0])))
+	{
+		mode = 1;	
+	}
+	else if (!strncmp("ftp", argv[0], strlen(argv[0])))
+	{
+		mode = 2;
+	}
+	else if (!strncmp("tftp", argv[0], strlen(argv[0])))
+	{
+		mode = 3;
+	}
+	else
+	{
+		vty_out(vty,"<error> input patameter only with 'none', 'capwap' , 'ftp' , 'tftp'\n");
+		return CMD_SUCCESS;
+	}
+
+	wtplist = (struct tag_wtpid_list*)malloc(sizeof(struct tag_wtpid_list));
+	if (!wtplist)
+	{	
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(wtplist, 0, sizeof(struct tag_wtpid_list));
+
+	if (wtplist_add_node(wtplist, wtpid))
+	{
+		destroy_input_wtp_list(wtplist);
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(&res_head, 0, sizeof(res_head));
+           DBusConnection *dcli_dbus_connection = NULL;
+	ReInitDbusConnection(&dcli_dbus_connection,slot_id,distributFag);
+	ret = wid_set_wtplist_upgrade_mode(localid,index, wtplist, mode, &res_head, dcli_dbus_connection);
+
+	if (ret)
+	{
+		vty_out(vty, "%s\n", dcli_wid_opcode2string(ret));
+	}
+	else
+	{
+		for (i = 0; i < res_head.num; i++)
+		{
+			if (res_head.node[i].res)
+			{
+				vty_out(vty, "WTP %d: %s\n",
+					res_head.node[i].u.wtpid, 
+					dcli_wid_opcode2string(res_head.node[i].res));
+			}
+		}
+	}
+
+	if (wtplist)
+	{
+		destroy_input_wtp_list(wtplist);
+	}
+
+	if (res_head.node)
+	{
+		free(res_head.node);
+		res_head.node = NULL;
+		res_head.num = 0;
+	}
+	
+	return CMD_SUCCESS; 
+}
+
+DEFUN(set_wtp_upgrade_mode_cmd_func,
+		  set_wtp_upgrade_mode_cmd,
+		  "set wtp WTPID update-mode (none|capwap|ftp|tftp)",
+		  WTP_SET
+		  WTP_STR
+		  WTPID_STR
+		  WTP_UPDATE_MODE
+		  "no update mode\n"
+		  "update with capwap tunnel\n"
+		  "update with ftp\n"
+		  "update with tftp\n"
+	 )
+{	
+	int ret = 0;
+	unsigned int wtpid = 0;
+	unsigned int i = 0;
+	update_wtp_list *wtplist = NULL;
+	struct res_head res_head;
+    	int mode = 0;
+	int index = 0;
+           int localid = 1;
+	int slot_id = HostSlotId;
+
+	
+        if(vty->node == CONFIG_NODE)
+    	{
+    		index = 0;
+    	}
+    	else if(vty->node == HANSI_NODE)
+    	{
+    		index = vty->index;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else if(vty->node == WTP_NODE)
+    	{
+    		index = 0;			
+    		wtpid = (unsigned int)vty->index;
+    	}
+    	else if(vty->node == HANSI_WTP_NODE)
+    	{
+    		index = (unsigned int)vty->index; 		
+    		wtpid = (unsigned int)vty->index_sub;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else
+    	{
+    		vty_out(vty,"%% unsupport mode\n");
+    		return CMD_WARNING;
+    	}
+	
+	if (!strncmp("none", argv[1], strlen(argv[1])))
+	{
+		mode = 0;	
+	}
+	else if (!strncmp("capwap", argv[1], strlen(argv[1])))
+	{
+		mode = 1;	
+	}
+	else if (!strncmp("ftp", argv[1], strlen(argv[1])))
+	{
+		mode = 2;
+	}
+	else if (!strncmp("tftp", argv[1], strlen(argv[1])))
+	{
+		mode = 3;
+	}
+	else
+	{
+		vty_out(vty,"<error> input patameter only with 'none', 'capwap' , 'ftp' , 'tftp'\n");
+		return CMD_SUCCESS;
+	}
+
+	ret = parse_int_ID((char*)argv[0], &wtpid);
+	if(ret != WID_DBUS_SUCCESS)
+	{	
+		destroy_input_wtp_list(wtplist);
+		vty_out(vty,"%% error wtpid format. correct format like:1, 33\n");		
+		return CMD_WARNING;
+	}
+
+	wtplist = (struct tag_wtpid_list*)malloc(sizeof(struct tag_wtpid_list));
+	if (!wtplist)
+	{	
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(wtplist, 0, sizeof(struct tag_wtpid_list));
+
+	if (wtplist_add_node(wtplist, wtpid))
+	{
+		destroy_input_wtp_list(wtplist);
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(&res_head, 0, sizeof(res_head));
+             DBusConnection *dcli_dbus_connection = NULL;
+	ReInitDbusConnection(&dcli_dbus_connection,slot_id,distributFag);
+	ret = wid_set_wtplist_upgrade_mode(localid,index, wtplist, mode, &res_head, dcli_dbus_connection);
+
+	if (ret)
+	{
+		vty_out(vty, "%s\n", dcli_wid_opcode2string(ret));
+	}
+	else
+	{
+		for (i = 0; i < res_head.num; i++)
+		{
+			if (res_head.node[i].res)
+			{
+				vty_out(vty, "WTP %d: %s\n",
+					res_head.node[i].u.wtpid, 
+					dcli_wid_opcode2string(res_head.node[i].res));
+			}
+		}
+	}
+
+	if (wtplist)
+	{
+		destroy_input_wtp_list(wtplist);
+	}
+
+	if (res_head.node)
+	{
+		free(res_head.node);
+		res_head.node = NULL;
+		res_head.num = 0;
+	}
+	
+	return CMD_SUCCESS; 
+}
+
+DEFUN(set_wtplist_upgrade_mode_cmd_func,
+		  set_wtplist_upgrade_mode_cmd,
+		  "set wtplist WTPLIST update-mode (none|capwap|ftp|tftp)",
+		  WTP_SET
+		  AC_WTP_LIST
+		  WTP_LIST_STR
+		  WTP_UPDATE_MODE
+		  "no update mode\n"
+		  "update with capwap tunnel\n"
+		  "update with ftp\n"
+		  "update with tftp\n"
+	 )
+{	
+	int ret = 0;
+	unsigned int wtpid = 0;
+	unsigned int i = 0;
+	update_wtp_list *wtplist;
+	struct res_head res_head;
+    	int mode = 0;
+	int index = 0;
+	int localid = 1;
+	int slot_id = HostSlotId;
+
+	
+        if(vty->node == CONFIG_NODE)
+    	{
+    		index = 0;
+    	}
+    	else if(vty->node == HANSI_NODE)
+    	{
+    		index = vty->index;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else if(vty->node == WTP_NODE)
+    	{
+    		index = 0;			
+    		wtpid = (unsigned int)vty->index;
+    	}
+    	else if(vty->node == HANSI_WTP_NODE)
+    	{
+    		index = (unsigned int)vty->index; 		
+    		wtpid = (unsigned int)vty->index_sub;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else
+    	{
+    		vty_out(vty,"%% unsupport mode\n");
+    		return CMD_WARNING;
+    	}
+	
+	if (!strncmp("none", argv[1], strlen(argv[1])))
+	{
+		mode = 0;	
+	}
+	else if (!strncmp("capwap", argv[1], strlen(argv[1])))
+	{
+		mode = 1;	
+	}
+	else if (!strncmp("ftp", argv[1], strlen(argv[1])))
+	{
+		mode = 2;
+	}
+	else if (!strncmp("tftp", argv[1], strlen(argv[1])))
+	{
+		mode = 3;
+	}
+	else
+	{
+		vty_out(vty,"<error> input patameter only with 'none', 'capwap' , 'ftp' , 'tftp'\n");
+		return CMD_SUCCESS;
+	}
+
+	wtplist = (struct tag_wtpid_list*)malloc(sizeof(struct tag_wtpid_list));
+	if (!wtplist)
+	{	
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(wtplist, 0, sizeof(struct tag_wtpid_list));
+
+	ret = parse_wtpid_list((char*)argv[0], &wtplist);
+	if(ret != WID_DBUS_SUCCESS)
+	{	
+		destroy_input_wtp_list(wtplist);
+		vty_out(vty,"%% error wtplist format. correct format:1, 8, 12, 21\n");			
+		return CMD_WARNING;
+	}
+	
+	memset(&res_head, 0, sizeof(res_head));
+            DBusConnection *dcli_dbus_connection = NULL;
+	ReInitDbusConnection(&dcli_dbus_connection,slot_id,distributFag);
+	ret = wid_set_wtplist_upgrade_mode(localid,index, wtplist, mode, &res_head, dcli_dbus_connection);
+
+	if (ret)
+	{
+		vty_out(vty, "%s\n", dcli_wid_opcode2string(ret));
+	}
+	else
+	{
+		for (i = 0; i < res_head.num; i++)
+		{
+			if (res_head.node[i].res)
+			{
+				vty_out(vty, "WTP %d: %s\n",
+					res_head.node[i].u.wtpid, 
+					dcli_wid_opcode2string(res_head.node[i].res));
+			}
+		}
+	}
+
+	if (wtplist)
+	{
+		destroy_input_wtp_list(wtplist);
+	}
+
+	if (res_head.node)
+	{
+		free(res_head.node);
+		res_head.node = NULL;
+		res_head.num = 0;
+	}
+	
+	return CMD_SUCCESS; 
+}
+
+DEFUN(set_all_wtp_upgrade_mode_cmd_func,
+		  set_all_wtp_upgrade_mode_cmd,
+		  "set wtp all update-mode (none|capwap|ftp|tftp)",
+		  WTP_SET
+		  "all wtp\n"
+		  "all wtp\n"
+		  WTP_UPDATE_MODE
+		  "no update mode\n"
+		  "update with capwap tunnel\n"
+		  "update with ftp\n"
+		  "update with tftp\n"
+	 )
+{	
+	int ret = 0;
+	unsigned int wtpid = 0;
+	unsigned int i = 0;
+	update_wtp_list *wtplist = NULL;
+	struct res_head res_head;
+    	int mode = 0;
+	int index = 0;
+	 int localid = 1;
+	int slot_id = HostSlotId;
+
+	
+        if(vty->node == CONFIG_NODE)
+    	{
+    		index = 0;
+    	}
+    	else if(vty->node == HANSI_NODE)
+    	{
+    		index = vty->index;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else if(vty->node == WTP_NODE)
+    	{
+    		index = 0;			
+    		wtpid = (unsigned int)vty->index;
+    	}
+    	else if(vty->node == HANSI_WTP_NODE)
+    	{
+    		index = (unsigned int)vty->index; 		
+    		wtpid = (unsigned int)vty->index_sub;
+    		localid = vty->local;
+    		slot_id = vty->slotindex;
+    	}
+    	else
+    	{
+    		vty_out(vty,"%% unsupport mode\n");
+    		return CMD_WARNING;
+    	}
+	
+	
+	if (!strncmp("none", argv[0], strlen(argv[0])))
+	{
+		mode = 0;	
+	}
+	else if (!strncmp("capwap", argv[0], strlen(argv[0])))
+	{
+		mode = 1;	
+	}
+	else if (!strncmp("ftp", argv[0], strlen(argv[0])))
+	{
+		mode = 2;
+	}
+	else if (!strncmp("tftp", argv[0], strlen(argv[0])))
+	{
+		mode = 3;
+	}
+	else
+	{
+		vty_out(vty,"<error> input patameter only with 'none', 'capwap' , 'ftp' , 'tftp'\n");
+		return CMD_SUCCESS;
+	}
+
+	wtplist = (struct tag_wtpid_list*)malloc(sizeof(struct tag_wtpid_list));
+	if (!wtplist)
+	{	
+		vty_out(vty, "%% No enough memory.\n");
+		return CMD_SUCCESS;
+	}
+	memset(wtplist, 0, sizeof(struct tag_wtpid_list));
+	
+	memset(&res_head, 0, sizeof(res_head));
+             DBusConnection *dcli_dbus_connection = NULL;
+	ReInitDbusConnection(&dcli_dbus_connection,slot_id,distributFag);
+	ret = wid_set_wtplist_upgrade_mode(localid,index, wtplist, mode, &res_head, dcli_dbus_connection);
+
+	if (ret)
+	{
+		vty_out(vty, "%s\n", dcli_wid_opcode2string(ret));
+	}
+	else
+	{
+		for (i = 0; i < res_head.num; i++)
+		{
+			if (res_head.node[i].res)
+			{
+				vty_out(vty, "WTP %d: %s\n",
+					res_head.node[i].u.wtpid, 
+					dcli_wid_opcode2string(res_head.node[i].res));
+			}
+		}
+	}
+
+	if (wtplist)
+	{
+		destroy_input_wtp_list(wtplist);
+	}
+
+	if (res_head.node)
+	{
+		free(res_head.node);
+		res_head.node = NULL;
+		res_head.num = 0;
+	}
+	
+	return CMD_SUCCESS; 
+}
+
 int dcli_wtp_show_running_config_start(struct vty*vty) {	
 	char *showStr = NULL,*cursor = NULL,ch = 0,tmpBuf[SHOWRUN_PERLINE_SIZE] = {0};
 	DBusMessage *query, *reply;
@@ -42796,6 +43333,9 @@ void dcli_wtp_init(void) {
 	install_element(LOCAL_HANSI_AP_GROUP_WTP_NODE,&tcpdump_ap_extension_command_cmd);
 	install_element(LOCAL_HANSI_AP_GROUP_WTP_NODE,&wtp_max_sta_cmd);
 
+           install_element(CONFIG_NODE,&set_all_wtp_upgrade_mode_cmd);
+	install_element(CONFIG_NODE,&set_wtp_upgrade_mode_cmd);	
+	install_element(CONFIG_NODE,&set_wtplist_upgrade_mode_cmd);
 	install_element(CONFIG_NODE,&download_ap_image_cmd);/*added by weiay 20081021*/
 	install_element(CONFIG_NODE,&download_ap_image_slot_cmd);
 	install_element(CONFIG_NODE,&download_certificate_image_cmd);
@@ -43172,6 +43712,9 @@ void dcli_wtp_init(void) {
 			install_node(&local_hansi_wtp_node,NULL,"LOCAL_HANSI_WTP_NODE");
 			install_default(LOCAL_HANSI_WTP_NODE);
 #endif		
+            install_element(HANSI_NODE,&set_wtp_upgrade_mode_cmd);	
+			install_element(HANSI_NODE,&set_wtplist_upgrade_mode_cmd);	
+	        install_element(HANSI_NODE,&set_all_wtp_upgrade_mode_cmd);
 			install_element(HANSI_NODE,&show_wtp_model_infor_cmd);
 			install_element(HANSI_NODE,&show_wtp_cmd);
 			install_element(HANSI_NODE,&show_wtp_list_cmd);
@@ -43394,7 +43937,7 @@ void dcli_wtp_init(void) {
 			install_element(HANSI_WTP_NODE, &set_ap_timing_upgrade_switch_cmd);
 			install_element(HANSI_WTP_NODE, &set_ap_timing_upgrade_timer_cmd);
 			install_element(HANSI_WTP_NODE, &show_ap_timing_upgrade_info_cmd);
-				
+			install_element(HANSI_WTP_NODE,&set_upgrade_mode_cmd);		
             install_element(HANSI_WTP_NODE,&set_wtp_lan_vlan_enable_cmd); //lilong add 2014.09.09
             install_element(HANSI_WTP_NODE,&set_wtp_lan_vlan_disable_cmd);
 			install_element(HANSI_WTP_NODE,&set_ap_longitude_latitude_cmd);

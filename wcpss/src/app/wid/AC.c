@@ -315,6 +315,9 @@ int auto_channel_scanning_time = 0;
 int auto_channel_scanning_switch = 0;
 int auto_channel_scanning_timerID = 0;
 int rrm_switch_timerID = 0;
+enum wtp_upgrade_mode g_wtp_upgrade_mode = WTP_UPGRADE_MODE_NONE;
+struct ap_update_config  g_ap_udapte_config;
+
 
 
 /*_________________________________________________________*/
@@ -632,6 +635,12 @@ void CWACInit() {
 	gWLAN_UNI_MUTI_BRO_CAST.rate = 10;
 	gWLAN_UNI_MUTI_BRO_CAST.unicast_policy = 0;
 	gWLAN_UNI_MUTI_BRO_CAST.wifi_policy =0;
+
+	/*ap_update_config*/
+	memset(&g_ap_udapte_config, 0, sizeof(struct ap_update_config));
+	memcpy(g_ap_udapte_config.user, "wtp", strlen("wtp"));
+	memcpy(g_ap_udapte_config.passwd, "w1t23p", strlen("w1t23p"));
+	
 	/*fengwenchao add end*/
 	license_binding_init("2,3");
 	license_binding_init("5,6");

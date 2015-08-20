@@ -13,6 +13,7 @@
 #include <sys/un.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -1345,6 +1346,42 @@ struct heart_time
 };
 /*fengwenchao add end*/
 
+enum wtp_upgrade_state	/* cur state */
+{
+	WTP_UPGRADE_STATE_DONE = 0,		/* init or upgrade finished */
+	WTP_UPGRADE_STATE_JOIN,		/* transmit Image Information = {size,hash} */		
+	WTP_UPGRADE_STATE_INITMD5,		/* transmit Image Information = {size,hash} */
+	WTP_UPGRADE_STATE_TXMD5,		/* transmit md5  */
+	WTP_UPGRADE_STATE_IMAGEING,		/* transmit Image  */
+	WTP_UPGRADE_STATE_IMAGEEND, 	/* transmit Image end */
+};
+enum wtp_upgrade_mode
+{
+	WTP_UPGRADE_MODE_NONE = 0,		/* old upgrade method*/
+	WTP_UPGRADE_MODE_CAPWAP = 1,
+	WTP_UPGRADE_MODE_FTP = 2,
+	WTP_UPGRADE_MODE_TFTP = 3,
+};
+
+#define WTP_IMAGENAME_LEN			(128)
+#define WTP_VERSION_LEN				(128)	
+#define WTP_MODE_LEN				        (128)	
+#define WID_MD5_LEN					(16)
+
+struct wtp_upgrade
+{
+	enum wtp_upgrade_state state;
+	enum wtp_upgrade_mode mode;
+	FILE *fp;
+	int filesize;	/* image size */
+	char version[WTP_VERSION_LEN];		/* EXP : 1.6.2113 */
+	char ImageName[WTP_IMAGENAME_LEN];	/* EXP : PC-APv5-v1.6.2113.img */
+	//char Mode[WTP_MODE_LEN];	/* EXP : PC-APv5-v1.6.2113.img */
+	unsigned char hash[WID_MD5_LEN];
+	int pktcnt;	/* send imagedata request cnt */
+};
+
+
 
 struct wtp{
 	u_int32_t	WTPID;
@@ -1543,6 +1580,7 @@ struct wtp{
 	char * lte_uplink_mode;
 	unsigned short link_quality_report_interval;
 	u_int8_t electronic_menu; //lilong add 2014.12.01
+	struct wtp_upgrade upgrade;
 };
 typedef struct wtp WID_WTP;
 
@@ -2710,6 +2748,14 @@ struct wifi_nf_info
 	unsigned int nfmark;
 };
 #endif
+
+struct ap_update_config
+{
+	unsigned int ipaddr;    /*FTP/TFTP :server ip*/
+	char user[64];
+	char passwd[128];
+	unsigned char encrypt_type;
+};
 
 /* AP EXTERNTION COMMAND MACRO */       /*yjl copy from aw3.1.2 .2014-2-28 */
 #define AP_EXT_CMD_NOTIFY_STA_PORTAL_AUTH "autelan tunnel_ctl ath.%d-%d setniflag %02X:%02X:%02X:%02X:%02X:%02X %d %u %u %u %u"
