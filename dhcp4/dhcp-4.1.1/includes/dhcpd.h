@@ -2796,6 +2796,7 @@ int write_billing_class PROTO ((struct class *));
 void commit_leases_timeout PROTO ((void *));
 void commit_leases_readerdry(void *);
 int commit_leases PROTO ((void));
+int commit_leases_timed (void);
 void db_startup PROTO ((int));
 int new_lease_file PROTO ((void));
 int group_writer (struct group_object *);

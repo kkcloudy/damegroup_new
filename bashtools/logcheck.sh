@@ -342,7 +342,7 @@ check_logfile_state /var/log/system.log
 check_syslog_state
 
 #check /var/db/dhcpd6.leases
-check_dhcp6_db
+#check_dhcp6_db
 
 # check memory state
 check_mem_state
