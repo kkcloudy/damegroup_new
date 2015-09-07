@@ -36,7 +36,7 @@
 #include <ctype.h>
 #include <errno.h>
 
-#define LEASE_REWRITE_PERIOD 300
+#define LEASE_REWRITE_PERIOD 150
 
 static isc_result_t write_binding_scope(FILE *db_file, struct binding *bnd,
 					char *prepend);
