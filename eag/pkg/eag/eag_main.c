@@ -60,6 +60,7 @@ extern nmp_mutex_t eag_ip6tables_lock;
 
 static int keep_going = 1;
 eag_ins_t *eagins = NULL;
+int radius_nas_port_type =0;
 
 static void
 print_usage(const char *file)

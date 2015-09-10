@@ -166,7 +166,7 @@ char EAG_DBUS_OBJPATH[MAX_DBUS_BUSNAME_LEN]="";
 char EAG_DBUS_INTERFACE[MAX_DBUS_BUSNAME_LEN]="";
 
 unsigned char ac_mac[6] = {0};
-
+ extern int radius_nas_port_type;
 static void
 eagins_register_all_dbus_method(eag_ins_t *eagins);
 
@@ -4399,6 +4399,9 @@ replyx:
 								DBUS_TYPE_UINT32, &nasipv6[2]);
 		dbus_message_iter_append_basic(&iter, 
 								DBUS_TYPE_UINT32, &nasipv6[3]);
+            	int nas_port_type = radius_nas_port_type;
+	          dbus_message_iter_append_basic(&iter,
+									DBUS_TYPE_INT32, &nas_port_type);
 	}
 	
 	return reply;
@@ -13286,6 +13289,53 @@ replyy:
 	return reply;
 }
 
+DBusMessage *
+eag_dbus_method_radius_nas_port_type(
+				DBusConnection *conn, 
+				DBusMessage *msg, 
+				void *user_data )
+{
+	DBusMessage* reply = NULL;
+	DBusMessageIter iter = {0};
+	DBusError		err = {0};
+	int status = 0;
+	int ret = EAG_RETURN_OK;
+	eag_log_info("eag_dbus_method_radius_nas_port_type");
+	reply = dbus_message_new_method_return(msg);
+	if (NULL == reply) {
+		eag_log_err("eag_dbus_method_radius_nas_port_type "\
+					"DBUS new reply message error!\n");
+		return NULL;
+	}
+
+	dbus_error_init(&err);
+	
+	if (!(dbus_message_get_args(msg ,&err,
+								DBUS_TYPE_INT32, &status,
+								DBUS_TYPE_INVALID))){
+		eag_log_err("eag_dbus_method_radius_nas_port_type "\
+					"unable to get input args\n");
+		if (dbus_error_is_set(&err)) {
+			eag_log_err("eag_dbus_method_radius_nas_port_type %s raised:%s\n",
+							err.name, err.message);
+			dbus_error_free(&err);
+		}
+		ret = EAG_ERR_DBUS_FAILED;
+		goto replyy;
+	}	
+	if(radius_nas_port_type != status)
+                     radius_nas_port_type = status;
+	eag_log_info("eag radius nas port type %d, %d\n",status,radius_nas_port_type);
+    	eag_log_info("eag radius nas port type  %s",(1== radius_nas_port_type)? "802.3":"802.11");
+
+replyy:
+	dbus_message_iter_init_append(reply, &iter);
+	dbus_message_iter_append_basic(&iter,
+									DBUS_TYPE_INT32, &ret);
+	return reply;
+}
+
+
 static void
 eagins_register_all_dbus_method(eag_ins_t *eagins)
 {
@@ -13550,6 +13600,8 @@ eagins_register_all_dbus_method(eag_ins_t *eagins)
 	/*eag pdc client*/
 	eag_dbus_register_method(eagins->eagdbus,
 		EAG_DBUS_INTERFACE, eag_dbus_method_set_pdc_client_log, NULL);
+	eag_dbus_register_method(eagins->eagdbus,
+		EAG_DBUS_INTERFACE, eag_dbus_method_radius_nas_port_type, eagins);
 
 	return;
 }

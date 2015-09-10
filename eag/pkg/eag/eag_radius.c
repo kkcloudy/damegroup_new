@@ -176,7 +176,7 @@ typedef enum {
 	RADIUS_ID_STATUS_TIMEOUT,
 	RADIUS_ID_RETRY_TIMEOUT,
 } radius_id_event_t;
-
+ extern int radius_nas_port_type;
 static void
 sock_radius_event(sock_radius_event_t event,
 		sock_radius_t *sockradius);
@@ -582,10 +582,12 @@ radius_add_public_attr(struct radius_packet_t *packet,
 	radius_addattr(packet, RADIUS_ATTR_NAS_PORT_ID, 0, 0, 0,
 		       (uint8_t *)appconn->session.nas_port_id,
 		       strlen(appconn->session.nas_port_id));
-
-	radius_addattr(packet, RADIUS_ATTR_NAS_PORT_TYPE, 0, 0,
-			      0x13, NULL, 0);
-
+        if(radius_nas_port_type == 0)
+	    radius_addattr(packet, RADIUS_ATTR_NAS_PORT_TYPE, 0, 0,
+                	        		      0x13, NULL, 0);
+        else
+	       radius_addattr(packet, RADIUS_ATTR_NAS_PORT_TYPE, 0, 0,
+	        		      0xf, NULL, 0);
 	return 0;
 }
 

@@ -157,6 +157,9 @@
 #define EAG_DBUS_METHOD_SET_USER_LOG_STATUS		"eag_dbus_method_set_user_log_status"
 #define EAG_DBUS_METHOD_SET_LOG_FORMAT_STATUS	"eag_dbus_method_set_log_format_status"
 #define EAG_DBUS_METHOD_SET_USERNAME_CHECK_STATUS	"eag_dbus_method_set_username_check_status"
+#define EAG_DBUS_METHOD_RADIUS_NAS_PORT_TYPE	"eag_dbus_method_radius_nas_port_type"
+
+
 
 static char EAG_DBUS_NAME[MAX_DBUS_BUSNAME_LEN]="";
 static char EAG_DBUS_OBJPATH[MAX_DBUS_BUSNAME_LEN]="";
@@ -2046,6 +2049,8 @@ eag_get_base_conf( DBusConnection *connection,
 			dbus_message_iter_next(&iter);
 			dbus_message_iter_get_basic(&iter,&nasipv6[3]);
 			memcpy(&(baseconf->nasipv6), nasipv6, sizeof(baseconf->nasipv6));
+			dbus_message_iter_next(&iter);
+			dbus_message_iter_get_basic(&iter,&(baseconf->nas_port_type));
 		}
 	}
 	
@@ -8544,4 +8549,50 @@ int captive_check_mac_format
 	}
 	return result;
 }
+
+int
+eag_radius_nas_port_type(DBusConnection *connection,
+				int hansitype, int insid,
+				unsigned int nas_port_type)
+{
+	DBusMessage *query = NULL;
+	DBusMessage *reply = NULL;
+	DBusError err = {0};
+	int iRet = 0;
+
+	eag_dbus_path_reinit(hansitype, insid);
+	query = dbus_message_new_method_call(
+									EAG_DBUS_NAME,
+									EAG_DBUS_OBJPATH,
+									EAG_DBUS_INTERFACE,
+									EAG_DBUS_METHOD_RADIUS_NAS_PORT_TYPE);
+	dbus_error_init(&err);
+	dbus_message_append_args(	query,
+								DBUS_TYPE_INT32,&nas_port_type,
+								DBUS_TYPE_INVALID );
+
+	reply = dbus_connection_send_with_reply_and_block (
+						connection, query, -1, &err );
+
+	dbus_message_unref(query);
+	
+	if (NULL == reply) {
+		if (dbus_error_is_set(&err)) {
+			dbus_error_free(&err);
+		}
+		return EAG_ERR_DBUS_FAILED;
+	}else{
+		dbus_message_get_args( reply,
+								&err,
+								DBUS_TYPE_INT32, &iRet,
+								DBUS_TYPE_INVALID );
+	}
+	
+	dbus_message_unref(reply);
+	
+	return iRet;
+
+}
+
+
 

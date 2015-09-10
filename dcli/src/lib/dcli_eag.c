@@ -6095,6 +6095,11 @@ eag_base_config_show_running(struct vty* vty)
 			snprintf(showStr, sizeof(showStr), " set telecom idletime-valuecheck on");
 			vtysh_add_show_string(showStr);		
 		}
+		if(1 == baseconf.nas_port_type)
+		{
+			snprintf(showStr, sizeof(showStr), " radius nas port type 802.3");
+			vtysh_add_show_string(showStr);		
+		}
 		if (1 == baseconf.status) {
 			snprintf(showStr, sizeof(showStr), " service enable");
 			vtysh_add_show_string(showStr);		
@@ -6277,6 +6282,11 @@ eag_base_config_show_running_2(int localid, int slot_id,int index)
 		}
 		if (1 == baseconf.telecom_idletime_valuecheck) {
 			totalLen += snprintf(cursor+totalLen, sizeof(showStr)-totalLen-1, " set telecom idletime-valuecheck on\n");
+		}
+		if(1 == baseconf.nas_port_type)
+		{
+			snprintf(showStr, sizeof(showStr), " radius nas port type 802.3");
+			vtysh_add_show_string(showStr);		
 		}
 		if (1 == baseconf.status) {
 			totalLen += snprintf(cursor+totalLen, sizeof(showStr)-totalLen-1, " service enable\n");	
@@ -16286,6 +16296,51 @@ DEFUN(no_debug_eag_pkt_info,
 }
 #endif
 
+DEFUN(eag_radius_nas_port_type_func,
+	eag_radius_nas_port_type_cmd,
+	"radius nas port type (802.3|802.11)",
+	"radius nas port type\n"
+	"radius nas port type\n"
+	"radius nas port type\n"
+	"radius nas port type\n"
+	"nas port type 802.11 | 802.3 \n"
+)
+{
+	int ret = 0;
+	unsigned int  nas_port_type =0;
+            if(!strncmp(argv[0],"802.3",strlen(argv[0])))
+		nas_port_type = 1;
+	else if(!strncmp(argv[0],"802.11",strlen(argv[0])))
+		nas_port_type= 0;
+	else
+		vty_out(vty, "please input 802.11 or 802.3\n");
+	
+	EAG_DCLI_INIT_HANSI_INFO
+
+	ret = eag_radius_nas_port_type(dcli_dbus_connection_curr,
+							hansitype, insid,
+							nas_port_type);
+	if (EAG_RETURN_OK == ret) {
+		return CMD_SUCCESS;
+	}
+	else if (EAG_ERR_DBUS_FAILED == ret) {
+		vty_out(vty, "%% dbus error\n");
+	}
+	else if (EAG_ERR_APPCONN_DELAPP_NOT_INDB == ret) {
+		vty_out(vty, "%% user not exist\n");
+	}
+	else if (EAG_ERR_HANSI_IS_BACKUP == ret) {
+		vty_out(vty, "%% device is backup\n");
+	}
+	else {
+		vty_out(vty, "%% unknown error: %d\n", ret);
+	}
+
+	return CMD_SUCCESS;
+}
+
+
+
 #if 1
 /* test */
 #endif
@@ -16388,6 +16443,7 @@ dcli_eag_init(void)
 	install_element(CONFIG_NODE, &show_eag_vlan_map_policy_cmd);
 	install_element(VIEW_NODE, &show_eag_vlan_map_policy_cmd);
 	install_element(EAG_NODE, &show_eag_vlan_map_policy_cmd);
+	install_element(EAG_NODE,&eag_radius_nas_port_type_cmd);
 	install_element(EAG_VLANMAP_NODE, &show_eag_vlan_map_policy_cmd);
 
 	/* eag_ins node */
@@ -16487,6 +16543,8 @@ dcli_eag_init(void)
 
 	install_element(EAG_NODE, &set_eag_portal_port_cmd);
 	install_element(HANSI_EAG_NODE, &set_eag_portal_port_cmd);
+	install_element(HANSI_EAG_NODE,&eag_radius_nas_port_type_cmd);
+
 	install_element(LOCAL_HANSI_EAG_NODE, &set_eag_portal_port_cmd);
 	
 	install_element(EAG_NODE, &set_eag_portal_retry_params_cmd);

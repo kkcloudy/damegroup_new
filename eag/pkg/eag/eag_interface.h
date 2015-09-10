@@ -91,6 +91,7 @@ struct eag_base_conf {
 	int telecom_idletime_valuecheck;
 	int ipv6_switch;
 	struct in6_addr nasipv6;
+	int nas_port_type;
 };
 
 struct api_nasid_map_t {
@@ -1141,6 +1142,11 @@ int
 eag_set_pdc_client_log( DBusConnection *connection, 
 				int hansitype,int insid, 					
 				int flag );
+
+int
+eag_radius_nas_port_type(DBusConnection *connection,
+				int hansitype, int insid,
+				unsigned int nas_port_type);
 
 #endif
 
