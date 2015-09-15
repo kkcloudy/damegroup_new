@@ -2805,12 +2805,6 @@ dhcp6_dbus_show_lease
 	unsigned int value = 0;
 	unsigned int ret = DHCP_SERVER_RETURN_CODE_SUCCESS;	
 	struct dhcp6_lease_info  *lease_info = NULL;
-	char *ipv6_adr = NULL;
-
-	ipv6_adr =malloc(128) ;
-	if(NULL == ipv6_adr){
-		return NULL;
-	}
 	
 	dbus_error_init(&err);	
 	if (!(dbus_message_get_args ( msg, &err,
@@ -2821,10 +2815,7 @@ dhcp6_dbus_show_lease
 			log_error("%s raised: %s",err.name,err.message);
 			dbus_error_free(&err);
 		}
-		if(ipv6_adr){
-			free(ipv6_adr);
-			ipv6_adr=NULL;
-		}
+
 		return NULL;
 	}
 	
@@ -2922,12 +2913,25 @@ dhcp6_dbus_show_lease
 				dbus_message_iter_close_container (&iter_array, &iter_struct);
 			}	
 			dbus_message_iter_close_container (&iter, &iter_array);
+
+			/* do clean */
+			for (i = 0; i < count; i++ ){
+				for(j = 0; j < lease_info[i].ipv6_num; j++){
+					if(lease_info[i].ipv6_addr[j]){
+						free(lease_info[i].ipv6_addr[j]);
+					}
+				}
+				if(lease_info[i].ipv6_addr){
+					free(lease_info[i].ipv6_addr);
+				}
+			}
+
+			if(lease_info){
+				free(lease_info);
+				lease_info=NULL;
+			}
 		}	
 	}
-	if(ipv6_adr){
-			free(ipv6_adr);
-			ipv6_adr=NULL;
-		}
 	
 	return reply;
 }
