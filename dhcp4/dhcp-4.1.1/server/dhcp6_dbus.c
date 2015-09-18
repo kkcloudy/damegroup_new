@@ -2899,16 +2899,7 @@ dhcp6_dbus_show_lease
 					
 				 	dbus_message_iter_close_container (&iter_ipv6_addr_array, &iter_ipv6_struct);					
 				}
-
-				for(j = 0;  j < lease_info[i].ipv6_num; j++){
-					if(lease_info[i].ipv6_addr[j]){
-						free(lease_info[i].ipv6_addr[j]);
-					}
-				}
-
-				if(lease_info[i].ipv6_addr){
-					free(lease_info[i].ipv6_addr);
-				}
+				
 				dbus_message_iter_close_container (&iter_struct, &iter_ipv6_addr_array);
 				dbus_message_iter_close_container (&iter_array, &iter_struct);
 			}	
