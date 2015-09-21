@@ -10419,6 +10419,13 @@ DBusMessage *asd_dbus_show_terminal_info_of_all_wtp(DBusConnection *conn, DBusMe
 				//printf("%s 222\n",__func__);
 			for(sta=bss[i]->sta_list; sta!=NULL; sta=sta->next){
 				char *ssid = sta->ssid->ssid;
+				if(ssid == NULL){
+				    ssid = ASD_BSS[bss[i]->BSSIndex]->SSID;
+				}
+				if(ssid == NULL){
+				    char ssid_tmp[7]={"unkonw"};
+				    ssid = ssid_tmp;
+				}
 				unsigned long isQos = sta->isQos;
 				unsigned long channel = sta->channel;
 				unsigned long nRate = sta->nRate;
