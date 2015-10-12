@@ -398,24 +398,21 @@ stamsg_proc(eag_stamsg_t *stamsg, uint8_t usermac[6],
 			del_eag_preauth_by_ip_or_mac(stamsg->macauth, &(appconn->session.user_addr), usermac);
 		}
 		
-		if (APPCONN_STATUS_AUTHED == appconn->session.state) {
-#if 0
-			if (SESSION_STA_LEAVE_NORMAL == sta_msg->STA.reason) {
-				eag_log_debug("eag_stamsg", "stamsg_proc receive WID_DEL"
-					" and user(%s) leave normal", user_ipstr);
-				appconn->session.session_stop_time = timenow;
-				eag_portal_notify_logout_nowait(stamsg->portal, appconn);
-				terminate_appconn(appconn, stamsg->eagins,
-					RADIUS_TERMINATE_CAUSE_LOST_CARRIER);
-			} else {
-				eag_log_debug("eag_stamsg", "stamsg_proc receive WID_DEL"
-					" and user(%s) leave abnormal(%u)", user_ipstr, sta_msg->STA.reason);
-			}
-#endif			
-		} else {
-			appconn_del_from_db(appconn);
-			appconn_free(appconn);
-		}
+		if (APPCONN_STATUS_AUTHED == appconn->session.state)
+		{
+		        if(appconn->session.leave_reason == 4)
+	                   {
+
+        				    appconn->session.session_stop_time = timenow;
+        				    eag_portal_notify_logout_nowait(stamsg->portal, appconn);
+        				    terminate_appconn(appconn, stamsg->eagins,
+        				            	RADIUS_TERMINATE_CAUSE_LOST_CARRIER);
+        			    
+		       }		
+		 } else {
+		            	appconn_del_from_db(appconn);
+			           appconn_free(appconn);
+		 }
 		break;	
 	case OPEN_ROAM: /* 26 */
 		/* STAMSG_ROAM */
