@@ -4357,6 +4357,8 @@ DEFUN(config_radius_server_select_cmd_func,
 			vty_out(vty,"<error> security profile does not exist.\n");			
 		else if(ret == ASD_SECURITY_WLAN_SHOULD_BE_DISABLE)			
 			vty_out(vty,"<error> this security profile is used by some wlans,please disable them first\n");
+                    else if(ret == ASD_SECURITY_TYPE_WITHOUT_8021X)			
+			vty_out(vty,"<error> encryption type should be 802.1X.\n");
 		else
 			vty_out(vty,"<error>  %d\n",ret);
 	dbus_message_unref(reply);
