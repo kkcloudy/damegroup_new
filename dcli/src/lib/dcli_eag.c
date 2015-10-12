@@ -6286,7 +6286,7 @@ eag_base_config_show_running_2(int localid, int slot_id,int index)
 		if(1 == baseconf.nas_port_type)
 		{
 			snprintf(showStr, sizeof(showStr), " radius nas port type 802.3");
-			vtysh_add_show_string(showStr);		
+				
 		}
 		if (1 == baseconf.status) {
 			totalLen += snprintf(cursor+totalLen, sizeof(showStr)-totalLen-1, " service enable\n");	
@@ -8455,6 +8455,8 @@ DEFUN(show_eag_base_conf_func,
 		vty_out(vty, "l2super-vlan                 :%s\n", (1 == baseconf.l2super_vlan)?"enable":"disable");
 		vty_out(vty, "username check               :%s\n", (1 == baseconf.username_check)?"on":"off");
 		vty_out(vty, "telecom idletime-valuecheck  :%s\n", (1 == baseconf.telecom_idletime_valuecheck)?"on":"off");
+		vty_out(vty, "radius nas port type         :%s\n", (1 == baseconf.nas_port_type)?"802.3":"802.11");
+
 	}
 	else {
 		vty_out(vty, "%% unknown error: %d\n", ret);
