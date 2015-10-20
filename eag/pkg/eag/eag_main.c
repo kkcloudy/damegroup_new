@@ -219,10 +219,10 @@ int main(int argc, char *argv[])
 		eag_log_err("eag_ins_new failed");
 		exit(1);
 	}
-	#if 0
+
 	eag_ipneigh_init();
 	eag_iproute_init();
-	#endif
+
 	eag_ipinfo_init();
 	eag_dcli_dl_init();
 	nmp_mutex_init(&eag_iptables_lock, IPTABLES_LOCK_FILE);
@@ -239,10 +239,10 @@ int main(int argc, char *argv[])
 	
 	eag_log_uninit();
 	eag_ipinfo_exit();
-	#if 0
+	
 	eag_ipneigh_uninit();
 	eag_iproute_uninit();
-	#endif
+
 	eag_dcli_dl_uninit();
 	nmp_mutex_destroy(&eag_iptables_lock);
 	nmp_mutex_destroy(&eag_ip6tables_lock);

@@ -6285,8 +6285,7 @@ eag_base_config_show_running_2(int localid, int slot_id,int index)
 		}
 		if(1 == baseconf.nas_port_type)
 		{
-			snprintf(showStr, sizeof(showStr), " radius nas port type 802.3");
-				
+			snprintf(showStr, sizeof(showStr), " radius nas port type 802.3\n");
 		}
 		if (1 == baseconf.status) {
 			totalLen += snprintf(cursor+totalLen, sizeof(showStr)-totalLen-1, " service enable\n");	

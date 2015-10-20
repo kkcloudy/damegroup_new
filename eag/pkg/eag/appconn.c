@@ -977,7 +977,7 @@ appconn_check_is_conflict(user_addr_t *user_addr, appconn_db_t *appdb, struct ap
 	if (EAG_IPV6 == user_addr->family) {
 		eag_ipv6info_get(session->intf, sizeof(session->intf)-1, session->usermac, &(user_addr->user_ipv6));
 	} else {
-		eag_ipinfo_get(session->intf, sizeof(session->intf)-1, session->usermac, user_addr->user_ip);
+		arp_ipneigh(session->intf, sizeof(session->intf)-1, session->usermac, user_addr->user_ip);
 	}
 	mac2str(session->usermac, macstr, sizeof(macstr), ':');
 	eag_log_debug("eag_ipinfo", "eag_ipinfo_get after userip=%s,usermac=%s,interface=%s",

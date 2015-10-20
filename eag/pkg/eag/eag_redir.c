@@ -1643,7 +1643,7 @@ eag_redir_accept(eag_thread_t *thread)
 		return -1;
 	}
 #endif
-	appconn = appconn_find_by_userip(redir->appdb, &user_addr);
+	appconn = appconn_find_by_useripx(redir->appdb, &user_addr);
 	if (NULL == appconn) {
 		ret = appconn_check_is_conflict(&user_addr, redir->appdb, &tmpsession, &tmp_appconn);
 		if (EAG_ERR_APPCONN_APP_IS_CONFLICT == ret && NULL != tmp_appconn) {

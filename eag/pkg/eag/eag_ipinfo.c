@@ -36,7 +36,6 @@
 
 static int ipinfo_sockfd = -1;
 
-#if 0
 //#define RTM_GETROUTE	26
 //#define AF_UNSPEC	0
 #define PREFIXLEN_SPECIFIED 1
@@ -1671,7 +1670,7 @@ int ip_interface(const unsigned long ip, char *const interface, size_t n)
 
 	return 0;
 }
-#endif
+
 #define SYSFS_PATH_MAX	256
 #define SYSFS_CLASS_NET "/sys/class/net/"
 static int first;
