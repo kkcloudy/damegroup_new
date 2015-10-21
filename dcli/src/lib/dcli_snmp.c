@@ -204,8 +204,14 @@ dcli_check_snmp_name(char *name, char flag, struct vty *vty) {
         return -1;
     }
     else if(ret_c == -3) {
-        vty_out(vty, "User name can't begin with # \" \' , \\ only appeared in end");
-        return -1;
+		if(1 == flag){
+            vty_out(vty, "\\ only appeared in end");
+            return -1;
+		}
+		else{
+            vty_out(vty, "User name can't begin with # \" \'");
+            return -1;
+		}
     }
     else if(ret_c == -4) {
         vty_out(vty, "User name should be ASCII value in the Non-control characters (Spaces except)");
