@@ -1335,7 +1335,16 @@ snmp_add_pfm_interface(char *ifName, unsigned int port) {
     tempNode->next = snmpSummary.interfaceHead;
     snmpSummary.interfaceHead = tempNode;
     snmpSummary.interface_num++;
-    
+
+/* add snmp port to /var/run/snmpport start */
+	char strcmd[100]={0};
+
+    sprintf(strcmd,"sudo echo %d > /var/run/snmpport",port);
+
+   	if((system(strcmd))<0)
+   		syslog(LOG_ERR, "Failed:set snmp port to /var/run/snmpport failed\n");
+/* add snmp port to /var/run/snmpport end */
+	
     syslog(LOG_DEBUG, "exit snmp_add_pfm_interface\n");
     return AC_MANAGE_SUCCESS;
 }
@@ -1375,6 +1384,18 @@ snmp_del_pfm_interface(char *ifName, unsigned int port) {
                 snmpSummary.snmp_sysinfo.agent_port = 0;
 				write_snmp_config(snmpSummary, CONF_FILE_PATH); 
 			}
+
+/* delete snmp port to /var/run/snmpport start */
+	char strcmd[100]={0};
+
+    sprintf(strcmd,"/var/run/snmpport");
+
+	if(remove(strcmd) == 0 )
+        syslog(LOG_INFO,"Removed %s success.", strcmd);
+    else
+        syslog(LOG_ERR, "Failed:delete snmp port for /var/run/snmpport failed\n");
+
+/* delete snmp port to /var/run/snmpport end */
                 
             syslog(LOG_DEBUG, "exit snmp_del_pfm_interface\n");
             return  AC_MANAGE_SUCCESS;
